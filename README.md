@@ -1,2 +1,2 @@
-# JAVA_COURSE_Kotellkov
+# JAVA_COURSE_Kotelkov
 КОТЕЛКОВ АНТОН ДМИТРИЕВИЧ
