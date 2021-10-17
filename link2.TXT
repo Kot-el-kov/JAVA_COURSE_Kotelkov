@@ -1,0 +1,65 @@
+SELECT starttime FROM cd.bookings
+INNER JOIN cd.members ON (members.memid = bookings.memid)
+WHERE firstname = 'David' AND surname = 'Farrell'
+
+
+
+SELECT starttime AS start,name FROM cd.bookings
+INNER JOIN cd.facilities ON (bookings.facid=facilities.facid)
+WHERE name ILIKE 'Tennis%' AND date_trunc('day', starttime) = '2012-09-21'
+GROUP BY starttime,name
+
+
+
+SELECT DISTINCT members.firstname,members.surname FROM cd.members as mem
+INNER JOIN cd.members ON (members.memid=mem.recommendedby)
+ORDER BY surname,firstname
+
+
+SELECT mem.firstname as memfname,mem.surname as memsname,
+rec.firstname as recfname,rec.surname as recsname FROM cd.members as mem
+LEFT OUTER JOIN cd.members as rec ON (rec.memid=mem.recommendedby)
+ORDER BY mem.surname,mem.firstname
+
+
+
+SELECT DISTINCT m.firstname||' '||m.surname as member,f.name as facility 
+from cd.members as m
+INNER JOIN cd.bookings AS b ON (m.memid = b.memid)
+INNER JOIN cd.facilities AS f ON (b.facid = f.facid)
+WHERE f.name LIKE 'Tennis%'
+ORDER BY member,facility
+
+
+SELECT m.firstname||' '||m.surname as member,f.name as facility,
+CASE WHEN m.memid = 0 THEN f.guestcost * b.slots ELSE f.membercost * b.slots END as cost 
+FROM cd.members as m
+INNER JOIN cd.bookings AS b ON (m.memid = b.memid)
+INNER JOIN cd.facilities AS f ON (b.facid = f.facid)
+WHERE date_trunc('day',b.starttime)='2012-09-14' AND
+((m.memid = 0 AND b.slots * f.guestcost > 30) OR 
+(m.memid > 0 AND b.slots * f.membercost > 30))
+ORDER BY cost DESC
+
+
+SELECT DISTINCT m.firstname||' '||m.surname as member,
+(SELECT r.firstname || ' ' || r.surname
+ FROM cd.members AS r
+ WHERE m.recommendedby = r.memid) AS recommender
+FROM cd.members AS m 
+ORDER BY member;
+
+
+SELECT member, facility, cost from (
+  SELECT
+  m.firstname || ' ' || m.surname as member,
+  f.name as facility,
+  CASE WHEN m.memid = 0 THEN b.slots * f.guestcost
+  ELSE b.slots * f.membercost END AS cost
+  FROM cd.members AS m
+  INNER JOIN cd.bookings AS b ON m.memid = b.memid
+  INNER JOIN cd.facilities AS f ON b.facid = f.facid
+  WHERE date_trunc('day', b.starttime) = '2012-09-14'
+) as bookings
+WHERE cost > 30
+ORDER BY cost DESC;
