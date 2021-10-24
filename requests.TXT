@@ -1,0 +1,3 @@
+select * from wishlists w inner join products p on w.product_id =p.id where p.id =1
+
+select * from histories h inner join products p on h.product_id = p.id where p.id = 1

@@ -1,0 +1,1 @@
+ALTER TABLE "stores_products" ADD CONSTRAINT "stores_products_fk0" FOREIGN KEY ("product_id") REFERENCES "products"("id");
