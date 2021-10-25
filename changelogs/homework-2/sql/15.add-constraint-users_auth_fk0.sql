@@ -1,1 +1,0 @@
-ALTER TABLE "users_auth" ADD CONSTRAINT "users_auth_fk0" FOREIGN KEY ("role_id") REFERENCES "roles"("id");
