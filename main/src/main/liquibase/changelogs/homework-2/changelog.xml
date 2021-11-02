@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>   
+<databaseChangeLog
+   xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.1.xsd
+      http://www.liquibase.org/xml/ns/pro 
+      http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.1.xsd"
+      logicalFilePath="homework-2">  
+    
+    <changeSet id="01.create-users_profiles-table" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/01.create-users_profiles-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="02.create-products-table" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/02.create-products-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="03.create-stores-table" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/03.create-stores-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="04.create-roles-table" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/04.create-roles-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="05.create-stores_products-table" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/05.create-stores_products-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="06.create-wishlists-table" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/06.create-wishlists-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="07.create-histories-table" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/07.create-histories-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="08.create-users_auth-table" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/08.create-users_auth-table.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="09.add-constraint-stores_products_fk0" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/09.add-constraint-stores_products_fk0.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="10.add-constraint-stores_products_fk1" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/10.add-constraint-stores_products_fk1.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="11.add-constraint-wishlists_fk0" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/11.add-constraint-wishlists_fk0.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="12.add-constraint-wishlists_fk1" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/12.add-constraint-wishlists_fk1.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="13.add-constraint-histories_fk0" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/13.add-constraint-histories_fk0.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="14.add-constraint-histories_fk1" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/14.add-constraint-histories_fk1.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="15.add-constraint-users_auth_fk0" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/15.add-constraint-users_auth_fk0.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="16.add-constraint-users_profiles_fk0" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/16.add-constraint-users_profiles_fk0.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="17.create-index-histories_fk2" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/17.create-index-histories_fk2.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+    <changeSet id="18.create-index-wishlists_fk2" author="Kotelkov Anton">
+        <sqlFile encoding="utf8" path="./sql/18.create-index-wishlists_fk2.sql" relativeToChangelogFile="true"/>
+    </changeSet>
+
+
+</databaseChangeLog> 

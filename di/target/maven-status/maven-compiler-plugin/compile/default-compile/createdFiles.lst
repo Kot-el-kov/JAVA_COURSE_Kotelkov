@@ -1,0 +1,10 @@
+com\github\kotelkov\pms\inject\DependencyController.class
+com\github\kotelkov\pms\configuration\ConfigReader.class
+com\github\kotelkov\pms\configuration\annotation\ConfigProperty.class
+com\github\kotelkov\pms\inject\DependencyInject.class
+com\github\kotelkov\pms\configuration\annotation\ConfigClass.class
+com\github\kotelkov\pms\inject\annotation\Autowired.class
+com\github\kotelkov\pms\configuration\ConfigService.class
+com\github\kotelkov\pms\configuration\Config.class
+com\github\kotelkov\pms\inject\DependencyService.class
+com\github\kotelkov\pms\inject\annotation\Component.class
