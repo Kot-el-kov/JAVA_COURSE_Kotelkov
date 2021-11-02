@@ -1,0 +1,1 @@
+ALTER TABLE "users_profiles" ADD CONSTRAINT "users_profiles_fk0" FOREIGN KEY ("id") REFERENCES "users_auth"("id");

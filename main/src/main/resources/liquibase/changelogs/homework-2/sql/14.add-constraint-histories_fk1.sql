@@ -1,0 +1,1 @@
+ALTER TABLE "histories" ADD CONSTRAINT "histories_fk1" FOREIGN KEY ("user_id") REFERENCES "users_profiles"("id");
