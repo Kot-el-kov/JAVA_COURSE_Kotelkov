@@ -1,7 +1,7 @@
 package com.github.kotelkov.pms.configuration;
 
-import com.github.kotelkov.pms.configuration.annotation.ConfigClass;
-import com.github.kotelkov.pms.configuration.annotation.Value;
+import com.github.kotelkov.pms.inject.annotation.Value;
+import com.github.kotelkov.pms.inject.annotation.Component;
 
 import java.lang.reflect.Field;
 import java.util.Arrays;
@@ -23,7 +23,7 @@ public class ConfigService {
 
     public void setValue(Object instanceOfClass) throws IllegalAccessException {
         this.configClass = instanceOfClass.getClass();
-        final ConfigClass annotation = configClass.getAnnotation(ConfigClass.class);
+        final Component annotation = configClass.getAnnotation(Component.class);
         if (!(annotation == null)) {
             this.configPath = annotation.configPath();
             addFieldValue(instanceOfClass);

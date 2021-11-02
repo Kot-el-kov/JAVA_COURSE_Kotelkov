@@ -1,6 +1,6 @@
 package com.github.kotelkov.pms.configuration;
 
-import com.github.kotelkov.pms.configuration.annotation.Value;
+import com.github.kotelkov.pms.inject.annotation.Value;
 
 import java.lang.reflect.Field;
 
