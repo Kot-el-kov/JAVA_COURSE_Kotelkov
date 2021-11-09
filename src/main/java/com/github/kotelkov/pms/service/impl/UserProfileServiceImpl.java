@@ -6,7 +6,7 @@ import com.github.kotelkov.pms.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class UserProfileServiceImpl implements UserProfileService {
@@ -25,7 +25,7 @@ public class UserProfileServiceImpl implements UserProfileService {
     }
 
     @Override
-    public ArrayList<UserProfile> getAllUsersProfiles() {
+    public List<UserProfile> getAllUsersProfiles() {
         return userProfileRepository.getAllUsersProfiles();
     }
 

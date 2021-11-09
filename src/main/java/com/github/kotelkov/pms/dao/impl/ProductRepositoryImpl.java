@@ -5,6 +5,7 @@ import com.github.kotelkov.pms.model.Product;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class ProductRepositoryImpl implements ProductRepository {
@@ -27,7 +28,7 @@ public class ProductRepositoryImpl implements ProductRepository {
     }
 
     @Override
-    public ArrayList<Product> getAllProducts() {
+    public List<Product> getAllProducts() {
         return productArrayList;
     }
 

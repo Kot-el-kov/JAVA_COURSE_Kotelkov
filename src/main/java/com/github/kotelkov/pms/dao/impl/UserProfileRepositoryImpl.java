@@ -5,6 +5,7 @@ import com.github.kotelkov.pms.model.UserProfile;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class UserProfileRepositoryImpl implements UserProfileRepository {
@@ -26,7 +27,7 @@ public class UserProfileRepositoryImpl implements UserProfileRepository {
     }
 
     @Override
-    public ArrayList<UserProfile> getAllUsersProfiles() {
+    public List<UserProfile> getAllUsersProfiles() {
         return userProfileArrayList;
     }
 

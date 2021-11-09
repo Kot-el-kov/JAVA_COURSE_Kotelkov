@@ -10,9 +10,9 @@ import org.springframework.stereotype.Component;
 public class StoreController {
 
     @Autowired
-    JsonToModelMapper jsonToModelMapper;
+    private JsonToModelMapper jsonToModelMapper;
     @Autowired
-    StoreService storeService;
+    private StoreService storeService;
     
     public void createStore(String jsonString) {
         Store store = (Store) jsonToModelMapper.convertToModel(jsonString,Store.class);

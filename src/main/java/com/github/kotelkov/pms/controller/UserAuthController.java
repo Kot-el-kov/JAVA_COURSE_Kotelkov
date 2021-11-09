@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 public class UserAuthController {
 
     @Autowired
-    JsonToModelMapper jsonToModelMapper;
+    private JsonToModelMapper jsonToModelMapper;
     @Autowired
     private UserAuthService userAuthService;
 

@@ -5,6 +5,7 @@ import com.github.kotelkov.pms.model.UserAuth;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class UserAuthRepositoryImpl implements UserAuthRepository {
@@ -26,7 +27,7 @@ public class UserAuthRepositoryImpl implements UserAuthRepository {
     }
 
     @Override
-    public ArrayList<UserAuth> getAllUsersAuths() {
+    public List<UserAuth> getAllUsersAuths() {
         return userAuthArrayList;
     }
 

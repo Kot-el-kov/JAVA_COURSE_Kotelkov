@@ -5,6 +5,7 @@ import com.github.kotelkov.pms.model.Store;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class StoreRepositoryImpl implements StoreRepository {
@@ -26,7 +27,7 @@ public class StoreRepositoryImpl implements StoreRepository {
     }
 
     @Override
-    public ArrayList<Store> getAllStores() {
+    public List<Store> getAllStores() {
         return storeArrayList;
     }
 

@@ -6,7 +6,7 @@ import com.github.kotelkov.pms.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class ProductServiceImpl implements ProductService {
@@ -25,7 +25,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ArrayList<Product> getAllProducts() {
+    public List<Product> getAllProducts() {
         return productRepository.getAllProducts();
     }
 

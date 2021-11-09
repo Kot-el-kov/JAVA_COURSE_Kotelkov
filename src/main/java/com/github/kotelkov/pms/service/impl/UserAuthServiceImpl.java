@@ -6,7 +6,7 @@ import com.github.kotelkov.pms.service.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class UserAuthServiceImpl implements UserAuthService {
@@ -25,7 +25,7 @@ public class UserAuthServiceImpl implements UserAuthService {
     }
 
     @Override
-    public ArrayList<UserAuth> getAllUsersAuths() {
+    public List<UserAuth> getAllUsersAuths() {
         return userAuthRepository.getAllUsersAuths();
     }
 
