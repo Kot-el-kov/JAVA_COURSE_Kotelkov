@@ -20,15 +20,17 @@ public class TransactionalAspect {
     public Object runInTransaction(ProceedingJoinPoint joinPoint) throws Throwable {
         try{
             connection.setAutoCommit(false);
-            joinPoint.proceed();
+            Object object = joinPoint.proceed();
             connection.commit();
+            return object;
         }catch (RuntimeException runtimeException){
             connection.rollback();
+            return runtimeException;
         }catch (Exception exception){
             connection.commit();
+            return exception;
         }finally {
             connection.setAutoCommit(true);
         }
-        return null;
     }
 }
