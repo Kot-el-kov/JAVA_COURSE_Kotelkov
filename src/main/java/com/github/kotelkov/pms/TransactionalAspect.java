@@ -25,10 +25,10 @@ public class TransactionalAspect {
             return object;
         }catch (RuntimeException runtimeException){
             connection.rollback();
-            return runtimeException;
+            throw runtimeException;
         }catch (Exception exception){
             connection.commit();
-            return exception;
+            throw exception;
         }finally {
             connection.setAutoCommit(true);
         }

@@ -15,8 +15,9 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
-    @Transactional
+
     @Override
+    @Transactional
     public void createProduct(Product product) throws Exception {
         productRepository.createProduct(product);
     }
