@@ -1,5 +1,6 @@
 package com.github.kotelkov.pms.service.impl;
 
+import com.github.kotelkov.pms.annotation.Transactional;
 import com.github.kotelkov.pms.dao.ProductRepository;
 import com.github.kotelkov.pms.model.Product;
 import com.github.kotelkov.pms.service.ProductService;
@@ -14,28 +15,34 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+
     @Override
-    public void createProduct(Product product) {
+    @Transactional
+    public void createProduct(Product product) throws Exception {
         productRepository.createProduct(product);
     }
 
+    @Transactional
     @Override
-    public Product getProductById(int id) {
+    public Product getProductById(int id) throws Exception {
         return productRepository.getProductById(id);
     }
 
+    @Transactional
     @Override
-    public List<Product> getAllProducts() {
+    public List<Product> getAllProducts() throws Exception {
         return productRepository.getAllProducts();
     }
 
+    @Transactional
     @Override
-    public boolean updateProduct(Product product) {
-        return productRepository.updateProduct(product);
+    public void updateProduct(Product product) throws Exception {
+        productRepository.updateProduct(product);
     }
 
+    @Transactional
     @Override
-    public boolean deleteProductById(int id) {
-        return productRepository.deleteProductById(id);
+    public void deleteProductById(int id) throws Exception {
+        productRepository.deleteProductById(id);
     }
 }
