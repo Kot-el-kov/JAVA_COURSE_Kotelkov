@@ -14,31 +14,31 @@ public class ProductController{
     @Autowired
     private ProductService productService;
 
-    public void createProduct(String jsonString) {
+    public void createProduct(String jsonString) throws Exception {
         Product product = (Product) jsonToModelMapper.convertToModel(jsonString,Product.class);
         productService.createProduct(product);
     }
 
 
-    public String getProductById(String jsonString) {
+    public String getProductById(String jsonString) throws Exception {
         Product product = (Product) jsonToModelMapper.convertToModel(jsonString,Product.class);
         return jsonToModelMapper.convertToJson(productService.getProductById(product.getId()));
     }
 
 
-    public String getAllProducts() {
+    public String getAllProducts() throws Exception {
         return jsonToModelMapper.convertToJson(productService.getAllProducts());
     }
 
 
-    public boolean updateProduct(String jsonString) {
+    public void updateProduct(String jsonString) throws Exception {
         Product product = (Product) jsonToModelMapper.convertToModel(jsonString,Product.class);
-        return productService.updateProduct(product);
+        productService.updateProduct(product);
     }
 
 
-    public boolean deleteProductById(String jsonString) {
+    public void deleteProductById(String jsonString) throws Exception {
         Product product = (Product) jsonToModelMapper.convertToModel(jsonString,Product.class);
-        return productService.deleteProductById(product.getId());
+        productService.deleteProductById(product.getId());
     }
 }

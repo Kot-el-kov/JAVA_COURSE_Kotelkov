@@ -6,6 +6,6 @@ import lombok.Data;
 public class Product {
     private int id;
     private String name;
-    private float price;
+    private int price;
     private String description;
 }
