@@ -1,7 +1,8 @@
 package com.github.kotelkov.pms.service.impl;
 
 import com.github.kotelkov.pms.dao.UserProfileRepository;
-import com.github.kotelkov.pms.model.UserProfile;
+import com.github.kotelkov.pms.entity.UserProfile;
+import com.github.kotelkov.pms.mapper.Mapper;
 import com.github.kotelkov.pms.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,29 +14,32 @@ public class UserProfileServiceImpl implements UserProfileService {
 
     @Autowired
     private UserProfileRepository userProfileRepository;
+    @Autowired
+    private Mapper mapper;
+
 
     @Override
     public void createUserProfile(UserProfile userProfile) {
-        userProfileRepository.createUserProfile(userProfile);
+
     }
 
     @Override
-    public UserProfile getUserProfileById(int id) {
-        return userProfileRepository.getUserProfileById(id);
+    public UserProfile getUserProfileById(Long id) {
+        return null;
     }
 
     @Override
     public List<UserProfile> getAllUsersProfiles() {
-        return userProfileRepository.getAllUsersProfiles();
+        return null;
     }
 
     @Override
     public boolean updateUserProfile(UserProfile userProfile) {
-        return userProfileRepository.updateUserProfile(userProfile);
+        return false;
     }
 
     @Override
-    public boolean deleteUserProfileById(int id) {
-        return userProfileRepository.deleteUserProfileById(id);
+    public boolean deleteUserProfileById(Long id) {
+        return false;
     }
 }

@@ -1,13 +1,14 @@
 package com.github.kotelkov.pms.service;
 
-import com.github.kotelkov.pms.model.Product;
+import com.github.kotelkov.pms.dto.ProductDto;
 
 import java.util.List;
 
 public interface ProductService {
-    void createProduct(Product product) throws Exception;
-    Product getProductById(int id) throws Exception;
-    List<Product> getAllProducts() throws Exception;
-    void updateProduct(Product product) throws Exception;
-    void deleteProductById(int id) throws Exception;
+    void createProduct(ProductDto productDto);
+    ProductDto getProductById(Long id);
+    List<ProductDto> getAllProducts();
+    void updateProduct(ProductDto productDto);
+    void deleteProduct(Long id);
+    List<ProductDto> getProductSortedByPrice();
 }

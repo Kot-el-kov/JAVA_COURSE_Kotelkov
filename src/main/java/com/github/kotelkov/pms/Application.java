@@ -2,69 +2,33 @@ package com.github.kotelkov.pms;
 
 
 import com.github.kotelkov.pms.controller.ProductController;
-import lombok.SneakyThrows;
+import com.github.kotelkov.pms.controller.StoreController;
+import com.github.kotelkov.pms.controller.UserAuthController;
+import com.github.kotelkov.pms.dao.StoreRepository;
+import com.github.kotelkov.pms.dao.impl.ProductRepositoryImpl;
+import com.github.kotelkov.pms.dao.impl.StoreRepositoryImpl;
+import com.github.kotelkov.pms.dto.ProductDto;
+import com.github.kotelkov.pms.dto.StoreDto;
+import com.github.kotelkov.pms.dto.UserAuthDto;
+import com.github.kotelkov.pms.entity.Product;
+import com.github.kotelkov.pms.entity.Store;
+import com.github.kotelkov.pms.entity.UserAuth;
+import com.github.kotelkov.pms.service.ProductService;
+import com.github.kotelkov.pms.service.impl.ProductServiceImpl;
+import com.github.kotelkov.pms.service.impl.StoreServiceImpl;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import java.sql.PseudoColumnUsage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Application {
 
-    @SneakyThrows
     public static void main(String[] args) {
         AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext("com.github.kotelkov.pms");
+        StoreController storeController = context.getBean(StoreController.class);
         ProductController productController = context.getBean(ProductController.class);
-        productController.createProduct("""
-                                                {
-                                                  "id" : "1",
-                                                  "name" : "Product1",
-                                                  "price" : "1001",
-                                                  "description" : "aaa"
-                                                }
-                                                """);
-        productController.createProduct("""
-                                                {
-                                                  "id" : "2",
-                                                  "name" : "Product2",
-                                                  "price" : "1002",
-                                                  "description" : "bbb"
-                                                }
-                                                """);
-
-        System.out.println(productController.getProductById("""
-                                                {
-                                                  "id" : "1",
-                                                  "name" : "Product1",
-                                                  "price" : "1001",
-                                                  "description" : "aaa"
-                                                }
-                                                """));
-
-        productController.updateProduct("""
-                                                {
-                                                  "id" : "1",
-                                                  "name" : "ProductUpdated",
-                                                  "price" : "1001",
-                                                  "description" : "aba"
-                                                }
-                                                """);
-
-        productController.deleteProductById("""
-                                                {
-                                                  "id" : "2",
-                                                  "name" : "Product2",
-                                                  "price" : "1002",
-                                                  "description" : "bbb"
-                                                }
-                                                """);
-
-        System.out.println(productController.getAllProducts());
-
-        productController.deleteProductById("""
-                                                {
-                                                  "id" : "1",
-                                                  "name" : "Product2",
-                                                  "price" : "1002",
-                                                  "description" : "bbb"
-                                                }
-                                                """);
-
+        UserAuthController userAuthController = context.getBean(UserAuthController.class);
     }
 }

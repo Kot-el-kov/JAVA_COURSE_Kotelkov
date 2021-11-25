@@ -1,54 +1,48 @@
 package com.github.kotelkov.pms.dao.impl;
 
+import com.github.kotelkov.pms.dao.AbstractDao;
 import com.github.kotelkov.pms.dao.StoreRepository;
-import com.github.kotelkov.pms.model.Store;
-import org.springframework.stereotype.Component;
+import com.github.kotelkov.pms.entity.Store;
+import com.github.kotelkov.pms.entity.Store_;
+import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.EntityGraph;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.JoinType;
+import javax.persistence.criteria.Root;
+import java.util.HashMap;
+import java.util.Map;
 
-@Component
-public class StoreRepositoryImpl implements StoreRepository {
 
-    private ArrayList<Store> storeArrayList = new ArrayList<>();
-    @Override
-    public void createStore(Store store) {
-        storeArrayList.add(store);
+@Repository
+public class StoreRepositoryImpl extends AbstractDao<Store,Long> implements StoreRepository {
+
+    public StoreRepositoryImpl() {
+        super(Store.class);
     }
 
     @Override
-    public Store getStoreById(int id) {
-        for (Store store:storeArrayList) {
-            if (store.getId()==id){
-                return store;
-            }
-        }
-        return null;
+    public Store getByIdWithProductsCriteria(Long id) {
+        final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        final CriteriaQuery<Store> query = criteriaBuilder.createQuery(Store.class);
+        final Root<Store> from = query.from(Store.class);
+        from.fetch(Store_.products, JoinType.LEFT);
+        return entityManager.createQuery(query.select(from).
+                where(criteriaBuilder.equal(from.get(Store_.id), id))).getSingleResult();
     }
 
     @Override
-    public List<Store> getAllStores() {
-        return storeArrayList;
+    public Store getByIdWithProductsJPQL(Long id) {
+        return entityManager.createQuery("select store from Store store left join fetch store.products products where store.id =:id", Store.class)
+                .setParameter("id", id).getSingleResult();
     }
 
     @Override
-    public boolean updateStore(Store store) {
-        Store curStore = getStoreById(store.getId());
-        if (curStore!=null){
-            storeArrayList.remove(curStore);
-            storeArrayList.add(store);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    public boolean deleteStoreById(int id) {
-        Store curStore = getStoreById(id);
-        if (curStore!=null){
-            storeArrayList.remove(curStore);
-            return true;
-        }
-        return false;
+    public Store getByIdWithProductsGraph(Long id) {
+        EntityGraph<?> graph = this.entityManager.getEntityGraph("with-products");
+        Map<String, Object> hints = new HashMap<>();
+        hints.put("javax.persistence.fetchgraph", graph);
+        return entityManager.find(Store.class, id, hints);
     }
 }

@@ -1,13 +1,13 @@
 package com.github.kotelkov.pms.service;
 
-import com.github.kotelkov.pms.model.UserAuth;
+import com.github.kotelkov.pms.dto.UserAuthDto;
 
 import java.util.List;
 
 public interface UserAuthService {
-    void createUserAuth(UserAuth userAuth);
-    UserAuth getUserAuthById(int id);
-    List<UserAuth> getAllUsersAuths();
-    boolean updateUserAuth(UserAuth userAuth);
-    boolean deleteUserAuthById(int id);
+    void createUserAuth(UserAuthDto userAuthDto);
+    UserAuthDto getUserAuthById(Long id);
+    List<UserAuthDto> getAllUsersAuths();
+    void updateUserAuth(UserAuthDto userAuthDto);
+    void deleteUserAuth(Long id);
 }
