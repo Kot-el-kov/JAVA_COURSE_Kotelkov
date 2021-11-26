@@ -21,7 +21,7 @@ public class Product {
     private int price;
     @Column(name = "description")
     private String description;
-    @ManyToMany(fetch = FetchType.LAZY,cascade = {CascadeType.ALL})
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "stores_products",
             joinColumns = @JoinColumn(name = "product_id"),
