@@ -1,13 +1,16 @@
 package com.github.kotelkov.pms.service;
 
-import com.github.kotelkov.pms.model.Store;
+import com.github.kotelkov.pms.dto.StoreDto;
 
 import java.util.List;
 
 public interface StoreService {
-    void createStore(Store store);
-    Store getStoreById(int id);
-    List<Store> getAllStores();
-    boolean updateStore(Store store);
-    boolean deleteStoreById(int id);
+    void createStore(StoreDto storeDto);
+    StoreDto getStoreById(Long id);
+    List<StoreDto> getAllStores();
+    void updateStore(StoreDto storeDto);
+    void deleteStore(Long id);
+    StoreDto getByIdWithProductsCriteria(Long id);
+    StoreDto getByIdWithProductsJPQL(Long id);
+    StoreDto getByIdWithProductsGraph(Long id);
 }

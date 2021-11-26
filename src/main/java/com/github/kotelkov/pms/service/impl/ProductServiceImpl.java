@@ -1,48 +1,58 @@
 package com.github.kotelkov.pms.service.impl;
 
-import com.github.kotelkov.pms.annotation.Transactional;
 import com.github.kotelkov.pms.dao.ProductRepository;
-import com.github.kotelkov.pms.model.Product;
+import com.github.kotelkov.pms.dto.ProductDto;
+import com.github.kotelkov.pms.entity.Product;
+import com.github.kotelkov.pms.mapper.Mapper;
 import com.github.kotelkov.pms.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Component
+@Service
 public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private Mapper mapper;
 
-
-    @Override
     @Transactional
-    public void createProduct(Product product) throws Exception {
-        productRepository.createProduct(product);
+    @Override
+    public void createProduct(ProductDto productDto) {
+        Product  product = new Product();
+        product= (Product) mapper.convertToModel(productDto,Product.class);
+        productRepository.save((Product) mapper.convertToModel(productDto,Product.class));
     }
 
     @Transactional
     @Override
-    public Product getProductById(int id) throws Exception {
-        return productRepository.getProductById(id);
+    public ProductDto getProductById(Long id) {
+        return (ProductDto) mapper.convertToDto(productRepository.getById(id),ProductDto.class);
     }
 
     @Transactional
     @Override
-    public List<Product> getAllProducts() throws Exception {
-        return productRepository.getAllProducts();
+    public List<ProductDto> getAllProducts() {
+        return mapper.convertListToDtoList(productRepository.getAll(),ProductDto.class);
     }
 
     @Transactional
     @Override
-    public void updateProduct(Product product) throws Exception {
-        productRepository.updateProduct(product);
+    public void updateProduct(ProductDto productDto) {
+        productRepository.update((Product) mapper.convertToModel(productDto,Product.class));
     }
 
     @Transactional
     @Override
-    public void deleteProductById(int id) throws Exception {
-        productRepository.deleteProductById(id);
+    public void deleteProduct(Long id) {
+        productRepository.delete(id);
+    }
+
+    @Override
+    public List<ProductDto> getProductSortedByPrice() {
+        return mapper.convertListToDtoList(productRepository.getProductsSortedByPrice(),ProductDto.class);
     }
 }

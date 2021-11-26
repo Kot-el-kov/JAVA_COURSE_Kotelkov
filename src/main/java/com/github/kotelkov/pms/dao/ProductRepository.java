@@ -1,13 +1,9 @@
 package com.github.kotelkov.pms.dao;
 
-import com.github.kotelkov.pms.model.Product;
+import com.github.kotelkov.pms.entity.Product;
 
 import java.util.List;
 
-public interface ProductRepository {
-    void createProduct(Product product) throws Exception;
-    Product getProductById(int id) throws Exception;
-    List<Product> getAllProducts() throws Exception;
-    void updateProduct(Product product) throws Exception;
-    void deleteProductById(int id) throws Exception;
+public interface ProductRepository extends GenericDao<Product, Long>{
+    List<Product> getProductsSortedByPrice();
 }

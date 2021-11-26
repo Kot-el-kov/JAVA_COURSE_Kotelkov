@@ -1,1 +1,0 @@
-ALTER TABLE "wishlists" ADD CONSTRAINT "wishlists_fk1" FOREIGN KEY ("user_id") REFERENCES "users_profiles"("id");
