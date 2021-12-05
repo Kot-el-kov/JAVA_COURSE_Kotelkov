@@ -14,7 +14,6 @@ import javax.persistence.criteria.Root;
 import java.util.HashMap;
 import java.util.Map;
 
-
 @Repository
 public class StoreRepositoryImpl extends AbstractDao<Store,Long> implements StoreRepository {
 
@@ -27,9 +26,9 @@ public class StoreRepositoryImpl extends AbstractDao<Store,Long> implements Stor
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Store> query = criteriaBuilder.createQuery(Store.class);
         final Root<Store> from = query.from(Store.class);
-        from.fetch(Store_.products, JoinType.LEFT);
+        from.fetch(Store_.PRODUCTS,JoinType.LEFT);
         return entityManager.createQuery(query.select(from).
-                where(criteriaBuilder.equal(from.get(Store_.id), id))).getSingleResult();
+                where(criteriaBuilder.equal(from.get(Store_.ID), id))).getSingleResult();
     }
 
     @Override

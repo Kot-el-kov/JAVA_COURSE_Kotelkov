@@ -1,39 +1,55 @@
 package com.github.kotelkov.pms.controller;
 
-import com.github.kotelkov.pms.mapper.Mapper;
-import com.github.kotelkov.pms.entity.UserProfile;
+import com.github.kotelkov.pms.dto.UserProfileDto;
+import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.service.UserProfileService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Component
+import java.util.List;
+import java.util.Optional;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/users_profiles")
 public class UserProfileController {
 
 
     @Autowired
     private UserProfileService userProfileService;
 
-    public void createUserProfile(String jsonString) {
-        //UserProfile userProfile = (UserProfile) mapper.convertToModel(jsonString,UserProfile.class);
-        //userProfileService.createUserProfile(userProfile);
+    @PostMapping
+    public ResponseEntity createUserProfile(@RequestBody UserProfileDto userProfileDto) {
+        userProfileService.createUserProfile(userProfileDto);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
-    public String getUserProfileById(String jsonString) {
-        //UserProfile userProfile = (UserProfile) mapper.convertToModel(jsonString,UserProfile.class);
-        return null;//mapper.convertToJson(userProfileService.getUserProfileById(userProfile.getId()));
+    @GetMapping("/{id}")
+    public ResponseEntity getUserProfileById(@PathVariable Long id) {
+        UserProfileDto userProfileDto = Optional.ofNullable(userProfileService.getUserProfileById(id)).
+                orElseThrow(()->new ResourceNotFoundException("UserProfile with id: "+id+" not found"));
+        return ResponseEntity.ok(userProfileDto);
     }
 
-    public String getAllUsersProfiles() {
-        return null;
+    @RequestMapping(value = "/all")
+    public ResponseEntity getAllUsersProfiles() {
+        List<UserProfileDto> userProfileDtoList = Optional.ofNullable(userProfileService.getAllUsersProfiles()).
+                orElseThrow(()->new ResourceNotFoundException("UsersProfiles not found"));
+        return ResponseEntity.ok(userProfileDtoList);
     }
 
-    public boolean updateUserProfile(String jsonString) {
-        //UserProfile userProfile = (UserProfile) mapper.convertToModel(jsonString,UserProfile.class);
-        return true;//userProfileService.updateUserProfile(userProfile);
+    @PutMapping
+    public ResponseEntity updateUserProfile(@RequestBody UserProfileDto userProfileDto) {
+        return ResponseEntity.ok(userProfileService.updateUserProfile(userProfileDto));
     }
 
-    public boolean deleteUserProfileById(String jsonString) {
-        //UserProfile userProfile = (UserProfile) mapper.convertToModel(jsonString,UserProfile.class);
-        return true;//userProfileService.deleteUserProfileById(userProfile.getId());
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity deleteUserProfileById(@PathVariable Long id) {
+        userProfileService.deleteUserProfileById(id);
+        return ResponseEntity.noContent().build();
     }
 }

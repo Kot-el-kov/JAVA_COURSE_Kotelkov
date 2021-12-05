@@ -19,8 +19,9 @@ public class UserAuthServiceImpl implements UserAuthService {
     private Mapper mapper;
 
     @Override
-    public void createUserAuth(UserAuthDto userAuthDto) {
-        userAuthRepository.save((UserAuth) mapper.convertToModel(userAuthDto, UserAuth.class));
+    public UserAuthDto createUserAuth(UserAuthDto userAuthDto) {
+        return (UserAuthDto) mapper.convertToDto(userAuthRepository.
+                save((UserAuth) mapper.convertToModel(userAuthDto, UserAuth.class)),UserAuthDto.class);
     }
 
     @Override
@@ -34,8 +35,9 @@ public class UserAuthServiceImpl implements UserAuthService {
     }
 
     @Override
-    public void updateUserAuth(UserAuthDto userAuthDto) {
-        userAuthRepository.update((UserAuth) mapper.convertToModel(userAuthDto,UserAuth.class));
+    public UserAuthDto updateUserAuth(UserAuthDto userAuthDto) {
+        return (UserAuthDto) mapper.convertToDto(userAuthRepository.update((UserAuth)
+                mapper.convertToModel(userAuthDto,UserAuth.class)),UserAuthDto.class);
     }
 
     @Override

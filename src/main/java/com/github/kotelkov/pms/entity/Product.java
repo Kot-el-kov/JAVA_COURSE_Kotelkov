@@ -1,19 +1,23 @@
 package com.github.kotelkov.pms.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Table(name = "products")
-@Data
+@Getter
+@Setter
+@ToString
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
 public class Product {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user-id-sequence")
+    @SequenceGenerator(name = "user-id-sequence", sequenceName = "users_seq", allocationSize = 1)
     private Long id;
     @Column(name = "name")
     private String name;

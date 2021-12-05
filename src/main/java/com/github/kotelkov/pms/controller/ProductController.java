@@ -1,39 +1,58 @@
 package com.github.kotelkov.pms.controller;
 
 import com.github.kotelkov.pms.dto.ProductDto;
+import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.service.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@Component
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/products")
 public class ProductController{
 
     @Autowired
     private ProductService productService;
 
-    public void createProduct(ProductDto productDto) {
+    @PostMapping
+    public ResponseEntity createProduct(@RequestBody ProductDto productDto) {
         productService.createProduct(productDto);
+        return ResponseEntity.ok(productDto);
     }
 
-    public ProductDto getProductById(Long id) {
-       return productService.getProductById(id);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity getProductById(@PathVariable Long id) {
+       ProductDto productDto = Optional.ofNullable(productService.getProductById(id)).
+               orElseThrow(() -> new ResourceNotFoundException("Product with id: "+id+" not found"));
+       return ResponseEntity.ok(productDto);
     }
 
-    public List<ProductDto> getAllProducts() {
-        return productService.getAllProducts();
+    @RequestMapping(value = "/all")
+    public ResponseEntity getAllProducts() {
+        List<ProductDto> productDtoList = Optional.ofNullable(productService.getAllProducts()).
+                orElseThrow(()-> new ResourceNotFoundException("Products not found"));
+        return ResponseEntity.ok(productDtoList);
     }
 
-    public void updateProduct(ProductDto productDto) {
-        productService.updateProduct(productDto);
+    @PutMapping
+    public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductDto productDto) {
+        return new ResponseEntity<>(productService.updateProduct(productDto), HttpStatus.OK);
     }
 
-    public void deleteProduct(Long id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
     }
 
-    public List<ProductDto> getProductBySortedPrice(){
-        return productService.getProductSortedByPrice();
+    @RequestMapping(value = "/all/sort/price")
+    public ResponseEntity getProductBySortedPrice(){
+        return ResponseEntity.ok(productService.getProductSortedByPrice());
     }
 }

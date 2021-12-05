@@ -1,40 +1,60 @@
 package com.github.kotelkov.pms.controller;
 
 import com.github.kotelkov.pms.dto.StoreDto;
+import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.service.StoreService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@Component
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/stores")
 public class StoreController {
 
     @Autowired
     private StoreService storeService;
-    
-    public void createStore(StoreDto storeDto) {
+
+    @PostMapping
+    public ResponseEntity createStore(@RequestBody StoreDto storeDto) {
         storeService.createStore(storeDto);
-    }
-    
-    public StoreDto getStoreById(Long id) {
-        return storeService.getStoreById(id);
-    }
-   
-    public List<StoreDto> getAllStores() {
-        return storeService.getAllStores();
-    }
-   
-    public void updateStore(StoreDto storeDto) {
-        storeService.updateStore(storeDto);
-    }
-    
-    public void deleteStore(Long id) {
-        storeService.deleteStore(id);
+        return new ResponseEntity(HttpStatus.CREATED);
     }
 
-    public StoreDto getByIdWithProductsCriteria(Long id){
-        return storeService.getByIdWithProductsCriteria(id);
+    @GetMapping(value = "/{id}")
+    public ResponseEntity getStoreById(@PathVariable Long id) {
+        StoreDto storeDto = Optional.ofNullable(storeService.getStoreById(id)).
+                orElseThrow(()-> new ResourceNotFoundException("Store with id: "+id+" not found"));
+        return ResponseEntity.ok(storeDto);
+    }
+
+
+    @RequestMapping(value = "/all")
+    public ResponseEntity getAllStores() {
+        List<StoreDto> storeDtoList = Optional.ofNullable(storeService.getAllStores()).
+                orElseThrow(()->new ResourceNotFoundException("Stores not found"));
+        return ResponseEntity.ok(storeDtoList);
+    }
+
+    @PutMapping
+    public ResponseEntity updateStore(StoreDto storeDto) {
+        return ResponseEntity.ok(storeService.updateStore(storeDto));
+    }
+
+    @DeleteMapping({"/{id}"})
+    public ResponseEntity deleteStore(@PathVariable Long id) {
+        storeService.deleteStore(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/all/{id}")
+    public ResponseEntity getByIdWithProductsCriteria(@PathVariable Long id){
+        return ResponseEntity.ok(storeService.getByIdWithProductsCriteria(id));
     }
 
     public StoreDto getByIdWithProductsJPQL(Long id){

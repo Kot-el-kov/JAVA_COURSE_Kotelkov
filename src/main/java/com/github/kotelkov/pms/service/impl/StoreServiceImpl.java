@@ -3,6 +3,7 @@ package com.github.kotelkov.pms.service.impl;
 import com.github.kotelkov.pms.dao.StoreRepository;
 import com.github.kotelkov.pms.dto.ProductDto;
 import com.github.kotelkov.pms.dto.StoreDto;
+import com.github.kotelkov.pms.dto.StoreWithProductsDto;
 import com.github.kotelkov.pms.entity.Store;
 import com.github.kotelkov.pms.mapper.Mapper;
 import com.github.kotelkov.pms.service.StoreService;
@@ -22,8 +23,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Transactional
     @Override
-    public void createStore(StoreDto storeDto) {
-        storeRepository.save((Store) mapper.convertToModel(storeDto,Store.class));
+    public StoreDto createStore(StoreDto storeDto) {
+        return (StoreDto) mapper.convertToDto(storeRepository.
+                save((Store) mapper.convertToModel(storeDto,Store.class)),StoreDto.class);
     }
 
     @Transactional
@@ -40,8 +42,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Transactional
     @Override
-    public void updateStore(StoreDto storeDto) {
-        storeRepository.update((Store) mapper.convertToModel(storeDto,Store.class));
+    public StoreDto updateStore(StoreDto storeDto) {
+        return (StoreDto) mapper.convertToDto(storeRepository.update((Store)
+                mapper.convertToModel(storeDto,Store.class)),StoreDto.class);
     }
 
     @Transactional
@@ -50,18 +53,27 @@ public class StoreServiceImpl implements StoreService {
         storeRepository.delete(id);
     }
 
+    @Transactional
     @Override
-    public StoreDto getByIdWithProductsCriteria(Long id) {
-        return (StoreDto) mapper.convertToDto(storeRepository.getByIdWithProductsCriteria(id),StoreDto.class);
+    public StoreWithProductsDto getByIdWithProductsCriteria(Long id) {
+        Store store = storeRepository.getByIdWithProductsCriteria(id);
+        StoreWithProductsDto storeDto = (StoreWithProductsDto) mapper.convertToDto(store,StoreWithProductsDto.class);
+        return (StoreWithProductsDto) mapper.convertToDto(storeRepository.getByIdWithProductsCriteria(id),StoreWithProductsDto.class);
     }
 
+    @Transactional
     @Override
     public StoreDto getByIdWithProductsJPQL(Long id) {
+        Store store = storeRepository.getByIdWithProductsJPQL(id);
+        StoreDto storeDto = (StoreDto) mapper.convertToDto(store,StoreDto.class);
         return (StoreDto) mapper.convertToDto(storeRepository.getByIdWithProductsJPQL(id),StoreDto.class);
     }
 
+    @Transactional
     @Override
     public StoreDto getByIdWithProductsGraph(Long id) {
+        Store store = storeRepository.getByIdWithProductsGraph(id);
+        StoreDto storeDto = (StoreDto) mapper.convertToDto(store,StoreDto.class);
         return (StoreDto) mapper.convertToDto(storeRepository.getByIdWithProductsGraph(id),StoreDto.class);
     }
 }

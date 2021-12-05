@@ -21,10 +21,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public void createProduct(ProductDto productDto) {
-        Product  product = new Product();
-        product= (Product) mapper.convertToModel(productDto,Product.class);
-        productRepository.save((Product) mapper.convertToModel(productDto,Product.class));
+    public ProductDto createProduct(ProductDto productDto) {
+        return (ProductDto) mapper.convertToDto(productRepository.
+                save((Product) mapper.convertToModel(productDto,Product.class)),ProductDto.class);
     }
 
     @Transactional
@@ -41,8 +40,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public void updateProduct(ProductDto productDto) {
-        productRepository.update((Product) mapper.convertToModel(productDto,Product.class));
+    public ProductDto updateProduct(ProductDto productDto) {
+        return (ProductDto) mapper.convertToDto(productRepository.update((Product)
+                mapper.convertToModel(productDto,Product.class)),ProductDto.class);
     }
 
     @Transactional
@@ -51,6 +51,7 @@ public class ProductServiceImpl implements ProductService {
         productRepository.delete(id);
     }
 
+    @Transactional
     @Override
     public List<ProductDto> getProductSortedByPrice() {
         return mapper.convertListToDtoList(productRepository.getProductsSortedByPrice(),ProductDto.class);

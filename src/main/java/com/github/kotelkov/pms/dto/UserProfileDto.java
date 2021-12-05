@@ -8,5 +8,4 @@ public class UserProfileDto {
     private String name;
     private String surname;
     private String email;
-    private UserAuthDto userAuthDto;
 }
