@@ -1,6 +1,7 @@
 package com.github.kotelkov.pms.service.impl;
 
 import com.github.kotelkov.pms.dao.ProductRepository;
+import com.github.kotelkov.pms.dto.ProductCreateDto;
 import com.github.kotelkov.pms.dto.ProductDto;
 import com.github.kotelkov.pms.entity.Product;
 import com.github.kotelkov.pms.mapper.Mapper;
@@ -21,7 +22,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public ProductDto createProduct(ProductDto productDto) {
+    public ProductDto createProduct(ProductCreateDto productDto) {
         return (ProductDto) mapper.convertToDto(productRepository.
                 save((Product) mapper.convertToModel(productDto,Product.class)),ProductDto.class);
     }

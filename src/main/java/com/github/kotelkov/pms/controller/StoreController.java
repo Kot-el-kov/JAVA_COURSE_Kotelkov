@@ -1,6 +1,7 @@
 package com.github.kotelkov.pms.controller;
 
 import com.github.kotelkov.pms.dto.StoreDto;
+import com.github.kotelkov.pms.dto.StoreWithProductsDto;
 import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.service.StoreService;
 import lombok.RequiredArgsConstructor;
@@ -27,23 +28,22 @@ public class StoreController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity getStoreById(@PathVariable Long id) {
+    public StoreDto getStoreById(@PathVariable Long id) {
         StoreDto storeDto = Optional.ofNullable(storeService.getStoreById(id)).
                 orElseThrow(()-> new ResourceNotFoundException("Store with id: "+id+" not found"));
-        return ResponseEntity.ok(storeDto);
+        return storeDto;
     }
 
-
-    @RequestMapping(value = "/all")
-    public ResponseEntity getAllStores() {
+    @GetMapping
+    public List<StoreDto> getAllStores() {
         List<StoreDto> storeDtoList = Optional.ofNullable(storeService.getAllStores()).
                 orElseThrow(()->new ResourceNotFoundException("Stores not found"));
-        return ResponseEntity.ok(storeDtoList);
+        return storeDtoList;
     }
 
     @PutMapping
-    public ResponseEntity updateStore(StoreDto storeDto) {
-        return ResponseEntity.ok(storeService.updateStore(storeDto));
+    public StoreDto updateStore(StoreDto storeDto) {
+        return storeService.updateStore(storeDto);
     }
 
     @DeleteMapping({"/{id}"})
@@ -52,9 +52,9 @@ public class StoreController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping(value = "/all/{id}")
-    public ResponseEntity getByIdWithProductsCriteria(@PathVariable Long id){
-        return ResponseEntity.ok(storeService.getByIdWithProductsCriteria(id));
+    @GetMapping(value = "/criteria/{id}")
+    public StoreWithProductsDto getByIdWithProductsCriteria(@PathVariable Long id){
+        return storeService.getByIdWithProductsCriteria(id);
     }
 
     public StoreDto getByIdWithProductsJPQL(Long id){

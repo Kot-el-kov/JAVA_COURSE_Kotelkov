@@ -1,5 +1,6 @@
 package com.github.kotelkov.pms.controller;
 
+import com.github.kotelkov.pms.dto.ProductCreateDto;
 import com.github.kotelkov.pms.dto.ProductDto;
 import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.service.ProductService;
@@ -21,28 +22,27 @@ public class ProductController{
     private ProductService productService;
 
     @PostMapping
-    public ResponseEntity createProduct(@RequestBody ProductDto productDto) {
-        productService.createProduct(productDto);
-        return ResponseEntity.ok(productDto);
+    public ProductDto createProduct(@RequestBody ProductCreateDto productDto) {
+        return  productService.createProduct(productDto);
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity getProductById(@PathVariable Long id) {
+    public ProductDto getProductById(@PathVariable Long id) {
        ProductDto productDto = Optional.ofNullable(productService.getProductById(id)).
                orElseThrow(() -> new ResourceNotFoundException("Product with id: "+id+" not found"));
-       return ResponseEntity.ok(productDto);
+       return productDto;
     }
 
-    @RequestMapping(value = "/all")
-    public ResponseEntity getAllProducts() {
+    @GetMapping
+    public List<ProductDto> getAllProducts() {
         List<ProductDto> productDtoList = Optional.ofNullable(productService.getAllProducts()).
                 orElseThrow(()-> new ResourceNotFoundException("Products not found"));
-        return ResponseEntity.ok(productDtoList);
+        return productDtoList;
     }
 
     @PutMapping
-    public ResponseEntity<ProductDto> updateProduct(@RequestBody ProductDto productDto) {
-        return new ResponseEntity<>(productService.updateProduct(productDto), HttpStatus.OK);
+    public ProductDto updateProduct(@RequestBody ProductDto productDto) {
+        return productService.updateProduct(productDto);
     }
 
     @DeleteMapping("/{id}")
@@ -51,8 +51,8 @@ public class ProductController{
         return ResponseEntity.noContent().build();
     }
 
-    @RequestMapping(value = "/all/sort/price")
-    public ResponseEntity getProductBySortedPrice(){
-        return ResponseEntity.ok(productService.getProductSortedByPrice());
+    @GetMapping(value = "/sorted-price")
+    public List<ProductDto> getProductBySortedPrice(){
+        return productService.getProductSortedByPrice();
     }
 }

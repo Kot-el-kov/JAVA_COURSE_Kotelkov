@@ -26,15 +26,17 @@ public class ProductControllerTest extends WebApplicationTest {
         final String productDto =
                             """  
                             {
-                               "name": "test"
+                               "name": "test",
+                               "price": "111",
+                               "description":"description"
                             }
                             """;
         mockMvc.perform(post("/products/").
                 contentType(MediaType.APPLICATION_JSON).
                 accept(MediaType.APPLICATION_JSON).
                 content(productDto)).
-                andExpect(status().is2xxSuccessful()).
                 andDo(print()).
+                andExpect(status().is2xxSuccessful()).
                 andExpect(jsonPath("$.id").exists());
 
         assertNotNull(productRepository.getByName("test"));

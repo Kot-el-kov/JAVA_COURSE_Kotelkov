@@ -5,8 +5,6 @@ import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,14 +16,12 @@ import java.util.Optional;
 @RequestMapping("/users_profiles")
 public class UserProfileController {
 
-
     @Autowired
     private UserProfileService userProfileService;
 
     @PostMapping
-    public ResponseEntity createUserProfile(@RequestBody UserProfileDto userProfileDto) {
-        userProfileService.createUserProfile(userProfileDto);
-        return new ResponseEntity(HttpStatus.CREATED);
+    public UserProfileDto createUserProfile(@RequestBody UserProfileDto userProfileDto) {
+        return userProfileService.createUserProfile(userProfileDto);
     }
 
     @GetMapping("/{id}")
@@ -35,16 +31,16 @@ public class UserProfileController {
         return ResponseEntity.ok(userProfileDto);
     }
 
-    @RequestMapping(value = "/all")
-    public ResponseEntity getAllUsersProfiles() {
+    @GetMapping
+    public List<UserProfileDto> getAllUsersProfiles() {
         List<UserProfileDto> userProfileDtoList = Optional.ofNullable(userProfileService.getAllUsersProfiles()).
                 orElseThrow(()->new ResourceNotFoundException("UsersProfiles not found"));
-        return ResponseEntity.ok(userProfileDtoList);
+        return userProfileDtoList;
     }
 
     @PutMapping
-    public ResponseEntity updateUserProfile(@RequestBody UserProfileDto userProfileDto) {
-        return ResponseEntity.ok(userProfileService.updateUserProfile(userProfileDto));
+    public UserProfileDto updateUserProfile(@RequestBody UserProfileDto userProfileDto) {
+        return userProfileService.updateUserProfile(userProfileDto);
     }
 
     @DeleteMapping(value = "/{id}")

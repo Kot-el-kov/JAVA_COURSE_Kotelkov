@@ -6,7 +6,6 @@ import com.github.kotelkov.pms.mapper.Mapper;
 import com.github.kotelkov.pms.service.UserAuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,28 +23,27 @@ public class UserAuthController {
     private UserAuthService userAuthService;
 
     @PostMapping
-    public ResponseEntity createUserAuth(@RequestBody UserAuthDto userAuthDto) {
-        userAuthService.createUserAuth(userAuthDto);
-        return new ResponseEntity(HttpStatus.CREATED);
+    public UserAuthDto createUserAuth(@RequestBody UserAuthDto userAuthDto) {
+        return userAuthService.createUserAuth(userAuthDto);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getUserAuthById(@PathVariable Long id) {
+    public UserAuthDto getUserAuthById(@PathVariable Long id) {
         UserAuthDto userAuthDto = Optional.ofNullable(userAuthService.getUserAuthById(id)).
                 orElseThrow(()->new ResourceNotFoundException("UserAuth with id: "+id+" not found"));
-        return ResponseEntity.ok(userAuthDto);
+        return userAuthDto;
     }
 
-    @RequestMapping(value = "/all")
-    public ResponseEntity getAllUsersAuths() {
+    @GetMapping
+    public List<UserAuthDto> getAllUsersAuths() {
         List<UserAuthDto> userAuthDtoList = Optional.ofNullable(userAuthService.getAllUsersAuths()).
                 orElseThrow(()->new ResourceNotFoundException("UsersAuths not found"));
-        return ResponseEntity.ok(userAuthDtoList);
+        return userAuthDtoList;
     }
 
     @PutMapping
-    public ResponseEntity updateUserAuth(@RequestBody UserAuthDto userAuthDto){
-        return ResponseEntity.ok(userAuthService.updateUserAuth(userAuthDto));
+    public UserAuthDto updateUserAuth(@RequestBody UserAuthDto userAuthDto){
+        return userAuthService.updateUserAuth(userAuthDto);
     }
 
     @DeleteMapping("/{id}")
@@ -53,5 +51,4 @@ public class UserAuthController {
         userAuthService.deleteUserAuth(id);
         return ResponseEntity.noContent().build();
     }
-
 }

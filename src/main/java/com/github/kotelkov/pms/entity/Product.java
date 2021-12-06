@@ -10,8 +10,8 @@ import java.util.List;
 @Setter
 @ToString
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Product {
 

@@ -1,6 +1,7 @@
 package com.github.kotelkov.pms.service;
 
 import com.github.kotelkov.pms.dao.impl.ProductRepositoryImpl;
+import com.github.kotelkov.pms.dto.ProductCreateDto;
 import com.github.kotelkov.pms.dto.ProductDto;
 import com.github.kotelkov.pms.entity.Product;
 import com.github.kotelkov.pms.mapper.Mapper;
@@ -30,12 +31,13 @@ public class ProductServiceTest {
 
     private final Product product = Product.builder().id(1L).name("name").price(100).description("description").build();
     private final ProductDto productDto = ProductDto.builder().id(1L).name("name").price(100).description("description").build();
+    private final ProductCreateDto productCreateDto = ProductCreateDto.builder().name("name").price(100).description("description").build();
 
     @Test
     public void createProduct(){
         when(productRepository.save(any())).thenReturn(product);
         when(mapper.convertToDto(any(Product.class),eq(ProductDto.class))).thenReturn(productDto);
-        final ProductDto productDto1 = productService.createProduct(productDto);
+        final ProductDto productDto1 = productService.createProduct(productCreateDto);
         assertEquals(productDto,productDto1);
     }
 
