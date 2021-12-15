@@ -1,19 +1,23 @@
 package com.github.kotelkov.pms.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Table(name = "products")
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
+@Builder
+@ToString(exclude = "stores")
 @AllArgsConstructor
+@NoArgsConstructor
 @Entity
 public class Product {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user-id-sequence")
+    @SequenceGenerator(name = "user-id-sequence", sequenceName = "users_seq", allocationSize = 1)
     private Long id;
     @Column(name = "name")
     private String name;
@@ -27,4 +31,5 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "store_id"))
     private List<Store> stores;
+
 }

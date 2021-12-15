@@ -1,12 +1,13 @@
 package com.github.kotelkov.pms.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.util.List;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class RoleDto {
     private Long id;
     private String name;
-    private List<UserAuthDto> userAuthsDto;
 }

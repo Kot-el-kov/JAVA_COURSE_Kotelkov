@@ -1,15 +1,16 @@
 package com.github.kotelkov.pms.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.github.kotelkov.pms.dto.ProductDto;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Table(name = "stores")
 @Entity
-@Data
+@Table(name = "stores")
+@Getter
+@Setter
+@ToString(exclude = "products")
 @NoArgsConstructor
 @AllArgsConstructor
 @NamedEntityGraph(
@@ -24,6 +25,10 @@ public class Store {
     private String name;
     @Column(name = "address")
     private String address;
-    @ManyToMany(fetch = FetchType.LAZY,mappedBy = "stores")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "stores_products",
+            joinColumns = @JoinColumn(name = "store_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> products;
 }

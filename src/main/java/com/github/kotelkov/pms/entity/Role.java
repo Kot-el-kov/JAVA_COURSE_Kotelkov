@@ -1,14 +1,16 @@
 package com.github.kotelkov.pms.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Table(name = "roles")
 @Entity
-@Data
+@Getter
+@Setter
+@ToString(exclude = "userAuths")
+@AllArgsConstructor
 @NoArgsConstructor
 public class Role {
     @Id
@@ -16,6 +18,7 @@ public class Role {
     private Long id;
     @Column(name = "name")
     private String name;
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "role")
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
     private List<UserAuth> userAuths;
 }

@@ -1,13 +1,16 @@
 package com.github.kotelkov.pms.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.management.ConstructorParameters;
 import javax.persistence.*;
 
 @Table(name = "users_auth")
 @Entity
-@Data
+@Getter
+@Setter
+@ToString(exclude = "role")
+@AllArgsConstructor
 @NoArgsConstructor
 public class UserAuth {
     @Id
@@ -23,4 +26,10 @@ public class UserAuth {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private UserProfile userProfile;
+
+    public UserAuth(String login,String password,Role role){
+        this.login=login;
+        this.password=password;
+        this.role=role;
+    }
 }

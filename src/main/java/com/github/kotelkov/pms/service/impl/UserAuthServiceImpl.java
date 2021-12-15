@@ -1,7 +1,10 @@
 package com.github.kotelkov.pms.service.impl;
 
 import com.github.kotelkov.pms.dao.UserAuthRepository;
+import com.github.kotelkov.pms.dto.RoleDto;
 import com.github.kotelkov.pms.dto.UserAuthDto;
+import com.github.kotelkov.pms.dto.UserAuthWithRoleDto;
+import com.github.kotelkov.pms.entity.Role;
 import com.github.kotelkov.pms.entity.UserAuth;
 import com.github.kotelkov.pms.mapper.Mapper;
 import com.github.kotelkov.pms.service.UserAuthService;
@@ -19,8 +22,9 @@ public class UserAuthServiceImpl implements UserAuthService {
     private Mapper mapper;
 
     @Override
-    public void createUserAuth(UserAuthDto userAuthDto) {
-        userAuthRepository.save((UserAuth) mapper.convertToModel(userAuthDto, UserAuth.class));
+    public UserAuthDto createUserAuth(UserAuthDto userAuthDto) {
+        return (UserAuthDto) mapper.convertToDto(userAuthRepository.
+                save((UserAuth) mapper.convertToModel(userAuthDto, UserAuth.class)),UserAuthDto.class);
     }
 
     @Override
@@ -34,8 +38,9 @@ public class UserAuthServiceImpl implements UserAuthService {
     }
 
     @Override
-    public void updateUserAuth(UserAuthDto userAuthDto) {
-        userAuthRepository.update((UserAuth) mapper.convertToModel(userAuthDto,UserAuth.class));
+    public UserAuthDto updateUserAuth(UserAuthDto userAuthDto) {
+        return (UserAuthDto) mapper.convertToDto(userAuthRepository.update((UserAuth)
+                mapper.convertToModel(userAuthDto,UserAuth.class)),UserAuthDto.class);
     }
 
     @Override
@@ -43,4 +48,11 @@ public class UserAuthServiceImpl implements UserAuthService {
         userAuthRepository.delete(id);
     }
 
+    @Override
+    public UserAuthWithRoleDto getByLoginWithRole(String login){
+        UserAuth userAuth = userAuthRepository.getByLoginWithRole(login);
+        UserAuthWithRoleDto userAuthWithRoleDto = (UserAuthWithRoleDto) mapper.convertToDto(userAuth,UserAuthWithRoleDto.class);
+        userAuthWithRoleDto.setRoleDto(new RoleDto(userAuth.getRole().getId(),userAuth.getRole().getName()));
+        return userAuthWithRoleDto;
+    }
 }
