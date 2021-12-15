@@ -1,1 +1,0 @@
-create unique index wishlists_fk2 on public.wishlists  using btree(product_id)
