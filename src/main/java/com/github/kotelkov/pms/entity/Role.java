@@ -1,14 +1,16 @@
 package com.github.kotelkov.pms.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Table(name = "roles")
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
 @NoArgsConstructor
 public class Role {
     @Id

@@ -1,11 +1,14 @@
 package com.github.kotelkov.pms.dao;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
+@Transactional
 public interface GenericDao<Entity, Id> {
-    void save(Entity entity);
+    Entity save(Entity entity);
     Entity getById(Id id);
-    void update(Entity entity);
+    Entity update(Entity entity);
     void delete(Long id);
     List<Entity> getAll();
 }

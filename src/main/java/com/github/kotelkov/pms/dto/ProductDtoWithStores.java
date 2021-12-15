@@ -1,14 +1,14 @@
 package com.github.kotelkov.pms.dto;
 
-import lombok.*;
+import lombok.Data;
+
+import java.util.List;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ProductDto {
+public class ProductDtoWithStores {
     private Long id;
     private String name;
     private int price;
     private String description;
+    private List<StoreDto> storesDto;
 }

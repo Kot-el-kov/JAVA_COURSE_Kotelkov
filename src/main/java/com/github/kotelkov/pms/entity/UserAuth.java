@@ -1,13 +1,16 @@
 package com.github.kotelkov.pms.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.management.ConstructorParameters;
 import javax.persistence.*;
 
 @Table(name = "users_auth")
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
+@AllArgsConstructor
 @NoArgsConstructor
 public class UserAuth {
     @Id

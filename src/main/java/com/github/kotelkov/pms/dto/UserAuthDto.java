@@ -7,5 +7,4 @@ public class UserAuthDto {
     private Long id;
     private String login;
     private String password;
-    private UserProfileDto userProfileDto;
 }

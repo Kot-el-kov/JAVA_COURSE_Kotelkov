@@ -19,8 +19,9 @@ public class AbstractDao<Entity, Id> implements GenericDao<Entity, Id>{
     }
 
     @Override
-    public void save(Entity entity) {
+    public Entity save(Entity entity) {
         entityManager.persist(entity);
+        return entity;
     }
 
     @Override
@@ -29,8 +30,8 @@ public class AbstractDao<Entity, Id> implements GenericDao<Entity, Id>{
     }
 
     @Override
-    public void update(Entity entity) {
-        entityManager.merge(entity);
+    public Entity update(Entity entity) {
+        return entityManager.merge(entity);
     }
 
     @Override
