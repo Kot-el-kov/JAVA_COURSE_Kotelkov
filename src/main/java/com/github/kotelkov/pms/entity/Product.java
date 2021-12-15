@@ -10,6 +10,7 @@ import java.util.List;
 @Setter
 @Builder
 @ToString(exclude = "stores")
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity

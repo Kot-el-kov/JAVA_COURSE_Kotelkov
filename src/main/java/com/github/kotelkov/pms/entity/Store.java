@@ -2,6 +2,7 @@ package com.github.kotelkov.pms.entity;
 
 import com.github.kotelkov.pms.dto.ProductDto;
 import lombok.*;
+import org.hibernate.mapping.FetchProfile;
 
 import javax.persistence.*;
 import java.util.List;
@@ -31,4 +32,5 @@ public class Store {
             joinColumns = @JoinColumn(name = "store_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> products;
+
 }

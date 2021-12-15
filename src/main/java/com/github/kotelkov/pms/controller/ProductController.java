@@ -22,6 +22,7 @@ public class ProductController{
     @Autowired
     private ProductService productService;
 
+
     @PreAuthorize(value = "hasRole('ADMIN')")
     @PostMapping
     public ProductDto createProduct(@RequestBody ProductCreateDto productDto) {
