@@ -1,6 +1,5 @@
 package com.github.kotelkov.pms.exception;
 
-
 import java.util.Date;
 
 public class ErrorMessage {

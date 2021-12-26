@@ -1,5 +1,6 @@
 package com.github.kotelkov.pms.entity;
 
+import com.github.kotelkov.pms.dto.ProductDto;
 import lombok.*;
 import org.hibernate.mapping.FetchProfile;
 
@@ -10,7 +11,7 @@ import java.util.List;
 @Table(name = "stores")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "products")
 @NoArgsConstructor
 @AllArgsConstructor
 @NamedEntityGraph(

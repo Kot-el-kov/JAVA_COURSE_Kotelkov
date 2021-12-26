@@ -9,7 +9,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "userAuths")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Role {
@@ -18,6 +18,7 @@ public class Role {
     private Long id;
     @Column(name = "name")
     private String name;
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "role")
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
     private List<UserAuth> userAuths;
 }

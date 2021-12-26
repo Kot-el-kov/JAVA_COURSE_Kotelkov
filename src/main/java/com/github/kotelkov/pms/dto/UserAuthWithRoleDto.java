@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAuthDto {
+public class UserAuthWithRoleDto {
     private Long id;
     private String login;
     private String password;
+    private RoleDto roleDto;
 }

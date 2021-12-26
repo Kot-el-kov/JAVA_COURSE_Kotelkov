@@ -58,7 +58,8 @@ public class StoreServiceImpl implements StoreService {
     public StoreWithProductsDto getByIdWithProductsCriteria(Long id) {
         Store store = storeRepository.getByIdWithProductsCriteria(id);
         StoreWithProductsDto storeDto = (StoreWithProductsDto) mapper.convertToDto(store,StoreWithProductsDto.class);
-        return (StoreWithProductsDto) mapper.convertToDto(storeRepository.getByIdWithProductsCriteria(id),StoreWithProductsDto.class);
+        storeDto.setProductsDto(mapper.convertListToDtoList(store.getProducts(),ProductDto.class));
+        return storeDto;
     }
 
     @Transactional
@@ -66,7 +67,7 @@ public class StoreServiceImpl implements StoreService {
     public StoreDto getByIdWithProductsJPQL(Long id) {
         Store store = storeRepository.getByIdWithProductsJPQL(id);
         StoreDto storeDto = (StoreDto) mapper.convertToDto(store,StoreDto.class);
-        return (StoreDto) mapper.convertToDto(storeRepository.getByIdWithProductsJPQL(id),StoreDto.class);
+        return storeDto;
     }
 
     @Transactional

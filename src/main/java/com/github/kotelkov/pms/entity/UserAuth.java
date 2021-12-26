@@ -9,7 +9,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "role")
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserAuth {
@@ -26,4 +26,10 @@ public class UserAuth {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
     private UserProfile userProfile;
+
+    public UserAuth(String login,String password,Role role){
+        this.login=login;
+        this.password=password;
+        this.role=role;
+    }
 }

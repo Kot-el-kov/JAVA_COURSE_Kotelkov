@@ -1,6 +1,7 @@
 package com.github.kotelkov.pms.controller;
 
 import com.github.kotelkov.pms.dto.UserAuthDto;
+import com.github.kotelkov.pms.dto.UserAuthWithRoleDto;
 import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.mapper.Mapper;
 import com.github.kotelkov.pms.service.UserAuthService;
@@ -50,5 +51,10 @@ public class UserAuthController {
     public ResponseEntity deleteUserAuth(@PathVariable Long id){
         userAuthService.deleteUserAuth(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/get/{login}")
+    public UserAuthWithRoleDto getByLoginWithRole(@PathVariable String login){
+        return userAuthService.getByLoginWithRole(login);
     }
 }

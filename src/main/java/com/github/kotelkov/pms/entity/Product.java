@@ -8,7 +8,8 @@ import java.util.List;
 @Table(name = "products")
 @Getter
 @Setter
-@ToString
+@Builder
+@ToString(exclude = "stores")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,4 +32,5 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "store_id"))
     private List<Store> stores;
+
 }
