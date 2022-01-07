@@ -1,17 +1,17 @@
 package com.github.kotelkov.pms.service;
 
-import com.github.kotelkov.pms.dto.StoreDto;
-import com.github.kotelkov.pms.dto.StoreWithProductsDto;
-
-import java.util.List;
+import com.github.kotelkov.pms.dto.store.StoreCreateDto;
+import com.github.kotelkov.pms.dto.store.StoreDto;
+import com.github.kotelkov.pms.dto.store.StoreWithProductsDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface StoreService {
-    StoreDto createStore(StoreDto storeDto);
+    StoreDto createStore(StoreCreateDto storeCreateDto);
     StoreDto getStoreById(Long id);
-    List<StoreDto> getAllStores();
+    Page<StoreDto> getAllStores(Pageable pageable);
     StoreDto updateStore(StoreDto storeDto);
     void deleteStore(Long id);
-    StoreWithProductsDto getByIdWithProductsCriteria(Long id);
-    StoreDto getByIdWithProductsJPQL(Long id);
-    StoreDto getByIdWithProductsGraph(Long id);
+    StoreWithProductsDto getStoreWithProducts(Long id);
+    StoreDto getStoreByName(String name);
 }

@@ -4,6 +4,7 @@ import com.github.kotelkov.pms.configuration.WebConfiguration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -14,6 +15,7 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = WebConfiguration.class)
 @WebAppConfiguration
+@WithMockUser(username="admin",roles={"ADMIN"})
 public class WebApplicationTest extends DatabaseHelper {
 
     @Autowired

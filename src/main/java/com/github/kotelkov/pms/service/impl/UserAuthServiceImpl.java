@@ -1,58 +1,115 @@
 package com.github.kotelkov.pms.service.impl;
 
 import com.github.kotelkov.pms.dao.UserAuthRepository;
-import com.github.kotelkov.pms.dto.RoleDto;
-import com.github.kotelkov.pms.dto.UserAuthDto;
-import com.github.kotelkov.pms.dto.UserAuthWithRoleDto;
+import com.github.kotelkov.pms.dao.impl.RoleRepositoryImpl;
+import com.github.kotelkov.pms.dto.role.RoleDto;
+import com.github.kotelkov.pms.dto.user.auth.UserAuthCreateDto;
+import com.github.kotelkov.pms.dto.user.auth.UserAuthDto;
+import com.github.kotelkov.pms.dto.user.auth.UserAuthWithRoleDto;
+import com.github.kotelkov.pms.dto.user.auth.UserAuthWithUserProfileDto;
+import com.github.kotelkov.pms.dto.user.profile.UserProfileDto;
 import com.github.kotelkov.pms.entity.Role;
 import com.github.kotelkov.pms.entity.UserAuth;
+import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.mapper.Mapper;
 import com.github.kotelkov.pms.service.UserAuthService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 
-@Component
-public class UserAuthServiceImpl implements UserAuthService {
+@RequiredArgsConstructor
+@Service
+public class UserAuthServiceImpl implements UserAuthService,UserDetailsService {
 
     @Autowired
     private UserAuthRepository userAuthRepository;
     @Autowired
     private Mapper mapper;
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleRepositoryImpl roleRepository;
 
+    @Transactional
     @Override
-    public UserAuthDto createUserAuth(UserAuthDto userAuthDto) {
-        return (UserAuthDto) mapper.convertToDto(userAuthRepository.
-                save((UserAuth) mapper.convertToModel(userAuthDto, UserAuth.class)),UserAuthDto.class);
+    public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
+        UserAuth user = Optional.ofNullable(userAuthRepository.getByLoginWithRole(login)).
+                orElseThrow(()->new ResourceNotFoundException(login +" not found"));
+        return new User(user.getLogin(),user.getPassword(),Optional.
+                ofNullable(user.getRole()).
+                map(Role::getName).
+                map(x-> List.of(new SimpleGrantedAuthority("ROLE_" + x))).
+                orElse(Collections.emptyList()));
     }
 
+    @Transactional
+    @Override
+    public void deleteUserAuthById(Long id) {
+        userAuthRepository.deleteUserAuth(id);
+    }
+
+    @Transactional
+    @Override
+    public UserAuthWithRoleDto createUserAuth(UserAuthCreateDto userAuthCreateDto) {
+        String role = userAuthCreateDto.getRole().toUpperCase(Locale.ROOT);
+        UserAuth userAuth = new UserAuth(userAuthCreateDto.getLogin(),
+                passwordEncoder.encode(userAuthCreateDto.getPassword()),roleRepository.getRoleByName(role));
+        userAuth = userAuthRepository.save(userAuth);
+        UserAuthWithRoleDto userAuthWithRoleDto = (UserAuthWithRoleDto) mapper.convertToDto(userAuth,UserAuthWithRoleDto.class);
+        userAuthWithRoleDto.setRoleDto((RoleDto) mapper.convertToDto(userAuth.getRole(),RoleDto.class));
+        return  userAuthWithRoleDto;
+    }
+
+    @Transactional
     @Override
     public UserAuthDto getUserAuthById(Long id) {
         return (UserAuthDto) mapper.convertToDto(userAuthRepository.getById(id),UserAuthDto.class);
     }
 
+    @Transactional
     @Override
-    public List<UserAuthDto> getAllUsersAuths() {
-        return mapper.convertListToDtoList(userAuthRepository.getAll(),UserAuthDto.class);
+    public Page getAllUsersAuths(Pageable pageable) {
+        List userAuthDtoList = mapper.convertListToDtoList(userAuthRepository.getAll(pageable),UserAuthDto.class);
+        return new PageImpl(userAuthDtoList,pageable,userAuthDtoList.size());
+
     }
 
+    @Transactional
     @Override
     public UserAuthDto updateUserAuth(UserAuthDto userAuthDto) {
-        return (UserAuthDto) mapper.convertToDto(userAuthRepository.update((UserAuth)
-                mapper.convertToModel(userAuthDto,UserAuth.class)),UserAuthDto.class);
+        UserAuth userAuth = userAuthRepository.getByIdWithRole(userAuthDto.getId());
+        userAuth.setLogin(userAuthDto.getLogin());
+        userAuth.setPassword(userAuthDto.getPassword());
+        return (UserAuthDto) mapper.convertToDto(userAuthRepository.update(userAuth),UserAuthDto.class);
     }
 
+    @Transactional
     @Override
-    public void deleteUserAuth(Long id) {
-        userAuthRepository.delete(id);
+    public UserAuthDto getUserAuthByLogin(String login){
+        return (UserAuthDto) mapper.convertToDto(userAuthRepository.getByLogin(login),UserAuthDto.class);
     }
 
+    @Transactional
     @Override
-    public UserAuthWithRoleDto getByLoginWithRole(String login){
-        UserAuth userAuth = userAuthRepository.getByLoginWithRole(login);
-        UserAuthWithRoleDto userAuthWithRoleDto = (UserAuthWithRoleDto) mapper.convertToDto(userAuth,UserAuthWithRoleDto.class);
-        userAuthWithRoleDto.setRoleDto(new RoleDto(userAuth.getRole().getId(),userAuth.getRole().getName()));
-        return userAuthWithRoleDto;
+    public UserAuthWithUserProfileDto getUserAuthWithUserProfile(Long id) {
+        UserAuth userAuth = userAuthRepository.getUserAuthWithUserProfile(id);
+        UserAuthWithUserProfileDto userAuthWithUserProfileDto = (UserAuthWithUserProfileDto) mapper.convertToDto(userAuth,UserAuthWithUserProfileDto.class);
+        userAuthWithUserProfileDto.setUserProfileDto((UserProfileDto) mapper.convertToDto(userAuth.getUserProfile(), UserProfileDto.class));
+        return userAuthWithUserProfileDto;
     }
 }

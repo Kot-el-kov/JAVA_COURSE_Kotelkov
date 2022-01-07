@@ -31,10 +31,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String authorization = httpServletRequest.getHeader(HttpHeaders.AUTHORIZATION);
         if (authorization != null && authorization.startsWith(BEARER)){
             final String token = authorization.substring(BEARER.length());
-            final String username = jwtProvider.getUsernameFromToken(token);
-            ofNullable(userDetailsService.loadUserByUsername(username)).
+            final Credo credo = jwtProvider.getCredoFromToken(token);
+            ofNullable(userDetailsService.loadUserByUsername(credo.getLogin())).
                     ifPresent(x-> SecurityContextHolder.getContext().
-                            setAuthentication(new UsernamePasswordAuthenticationToken(username,null,x.getAuthorities())));
+                            setAuthentication(new UsernamePasswordAuthenticationToken(credo.getId().toString(),null,x.getAuthorities())));
         }
         filterChain.doFilter(httpServletRequest,httpServletResponse);
     }

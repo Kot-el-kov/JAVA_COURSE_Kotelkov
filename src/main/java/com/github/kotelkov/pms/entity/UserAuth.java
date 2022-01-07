@@ -2,19 +2,20 @@ package com.github.kotelkov.pms.entity;
 
 import lombok.*;
 
-import javax.management.ConstructorParameters;
 import javax.persistence.*;
 
 @Table(name = "users_auth")
 @Entity
 @Getter
 @Setter
+@Builder
 @ToString(exclude = "role")
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserAuth {
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userAuth-id-sequence")
+    @SequenceGenerator(name = "userAuth-id-sequence", sequenceName = "users_auth_id_seq", allocationSize = 1)
     private Long id;
     @Column(name = "login")
     private String login;
@@ -23,7 +24,7 @@ public class UserAuth {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
     private Role role;
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY,orphanRemoval = true)
     @JoinColumn(name = "id")
     private UserProfile userProfile;
 

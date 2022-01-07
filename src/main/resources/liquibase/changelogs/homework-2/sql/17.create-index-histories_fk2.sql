@@ -1,1 +1,1 @@
-create unique index histories_fk2 on public.histories using btree(product_id)
+create index histories_fk2 on public.histories using btree(product_id)

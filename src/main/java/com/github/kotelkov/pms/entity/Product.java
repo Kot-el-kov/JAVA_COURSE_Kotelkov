@@ -10,15 +10,13 @@ import java.util.List;
 @Setter
 @Builder
 @ToString(exclude = "stores")
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class Product {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user-id-sequence")
-    @SequenceGenerator(name = "user-id-sequence", sequenceName = "users_seq", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products-id-sequence")
+    @SequenceGenerator(name = "products-id-sequence", sequenceName = "products_id_seq", allocationSize = 1)
     private Long id;
     @Column(name = "name")
     private String name;
@@ -32,5 +30,16 @@ public class Product {
             joinColumns = @JoinColumn(name = "product_id"),
             inverseJoinColumns = @JoinColumn(name = "store_id"))
     private List<Store> stores;
-
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "wishlists",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<UserProfile> wishlists;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "histories",
+            joinColumns = @JoinColumn(name = "product_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<UserProfile> histories;
 }

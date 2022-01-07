@@ -1,13 +1,17 @@
 package com.github.kotelkov.pms.service.impl;
 
 import com.github.kotelkov.pms.dao.StoreRepository;
-import com.github.kotelkov.pms.dto.ProductDto;
-import com.github.kotelkov.pms.dto.StoreDto;
-import com.github.kotelkov.pms.dto.StoreWithProductsDto;
+import com.github.kotelkov.pms.dto.product.ProductDto;
+import com.github.kotelkov.pms.dto.store.StoreCreateDto;
+import com.github.kotelkov.pms.dto.store.StoreDto;
+import com.github.kotelkov.pms.dto.store.StoreWithProductsDto;
 import com.github.kotelkov.pms.entity.Store;
 import com.github.kotelkov.pms.mapper.Mapper;
 import com.github.kotelkov.pms.service.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,9 +27,9 @@ public class StoreServiceImpl implements StoreService {
 
     @Transactional
     @Override
-    public StoreDto createStore(StoreDto storeDto) {
+    public StoreDto createStore(StoreCreateDto storeCreateDto) {
         return (StoreDto) mapper.convertToDto(storeRepository.
-                save((Store) mapper.convertToModel(storeDto,Store.class)),StoreDto.class);
+                save((Store) mapper.convertToModel(storeCreateDto,Store.class)),StoreDto.class);
     }
 
     @Transactional
@@ -36,8 +40,10 @@ public class StoreServiceImpl implements StoreService {
 
     @Transactional
     @Override
-    public List<StoreDto> getAllStores() {
-        return mapper.convertListToDtoList(storeRepository.getAll(),StoreDto.class);
+    public Page getAllStores(Pageable pageable) {
+        List storeDtoList = mapper.convertListToDtoList(storeRepository.getAll(pageable),StoreDto.class);
+        return new PageImpl(storeDtoList,pageable,storeDtoList.size());
+
     }
 
     @Transactional
@@ -55,8 +61,8 @@ public class StoreServiceImpl implements StoreService {
 
     @Transactional
     @Override
-    public StoreWithProductsDto getByIdWithProductsCriteria(Long id) {
-        Store store = storeRepository.getByIdWithProductsCriteria(id);
+    public StoreWithProductsDto getStoreWithProducts(Long id) {
+        Store store = storeRepository.getStoreWithProducts(id);
         StoreWithProductsDto storeDto = (StoreWithProductsDto) mapper.convertToDto(store,StoreWithProductsDto.class);
         storeDto.setProductsDto(mapper.convertListToDtoList(store.getProducts(),ProductDto.class));
         return storeDto;
@@ -64,17 +70,7 @@ public class StoreServiceImpl implements StoreService {
 
     @Transactional
     @Override
-    public StoreDto getByIdWithProductsJPQL(Long id) {
-        Store store = storeRepository.getByIdWithProductsJPQL(id);
-        StoreDto storeDto = (StoreDto) mapper.convertToDto(store,StoreDto.class);
-        return storeDto;
-    }
-
-    @Transactional
-    @Override
-    public StoreDto getByIdWithProductsGraph(Long id) {
-        Store store = storeRepository.getByIdWithProductsGraph(id);
-        StoreDto storeDto = (StoreDto) mapper.convertToDto(store,StoreDto.class);
-        return (StoreDto) mapper.convertToDto(storeRepository.getByIdWithProductsGraph(id),StoreDto.class);
+    public StoreDto getStoreByName(String name) {
+        return (StoreDto) mapper.convertToDto(storeRepository.getStoreByName(name),StoreDto.class);
     }
 }

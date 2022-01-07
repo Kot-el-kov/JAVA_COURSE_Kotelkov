@@ -1,15 +1,25 @@
 package com.github.kotelkov.pms.controller;
 
-import com.github.kotelkov.pms.dto.UserProfileDto;
+import com.github.kotelkov.pms.dto.user.profile.UserProfileCreateDto;
+import com.github.kotelkov.pms.dto.user.profile.UserProfileDto;
+import com.github.kotelkov.pms.dto.user.profile.UserProfileWithHistoryDto;
+import com.github.kotelkov.pms.dto.user.profile.UserProfileWithWishlistDto;
 import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.validation.Valid;
 import java.util.Optional;
+
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,33 +29,60 @@ public class UserProfileController {
     @Autowired
     private UserProfileService userProfileService;
 
+    @PreAuthorize(value = "hasAnyRole('ADMIN','USER','SELLER')")
     @PostMapping
-    public UserProfileDto createUserProfile(@RequestBody UserProfileDto userProfileDto) {
-        return userProfileService.createUserProfile(userProfileDto);
+    public UserProfileDto createUserProfile(@AuthenticationPrincipal String userId,@Valid @RequestBody UserProfileCreateDto userProfileCreateDto) {
+        return userProfileService.createUserProfile(Long.parseLong(userId),userProfileCreateDto);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity getUserProfileById(@PathVariable Long id) {
-        UserProfileDto userProfileDto = Optional.ofNullable(userProfileService.getUserProfileById(id)).
-                orElseThrow(()->new ResourceNotFoundException("UserProfile with id: "+id+" not found"));
-        return ResponseEntity.ok(userProfileDto);
+    @PreAuthorize(value = "hasAnyRole('ADMIN','USER','SELLER')")
+    @GetMapping("/id")
+    public UserProfileDto getUserProfileById(@AuthenticationPrincipal String userId) {
+        UserProfileDto userProfileDto = Optional.ofNullable(userProfileService.getUserProfileById(Long.parseLong(userId))).
+                orElseThrow(()->new ResourceNotFoundException("UserProfile with id: "+userId+" not found"));
+        return userProfileDto;
     }
 
+    @PreAuthorize(value = "hasRole('ADMIN')")
     @GetMapping
-    public List<UserProfileDto> getAllUsersProfiles() {
-        List<UserProfileDto> userProfileDtoList = Optional.ofNullable(userProfileService.getAllUsersProfiles()).
-                orElseThrow(()->new ResourceNotFoundException("UsersProfiles not found"));
+    public Page<UserProfileDto> getAllUsersProfiles(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
+                                                    @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
+                                                    @RequestParam(value = "sort", defaultValue = "id", required = false) String sort) {
+        Page<UserProfileDto> userProfileDtoList = userProfileService.getAllUsersProfiles(PageRequest.of(page, size, ASC, sort));
         return userProfileDtoList;
     }
 
+    @PreAuthorize(value = "hasAnyRole('ADMIN','USER','SELLER')")
     @PutMapping
-    public UserProfileDto updateUserProfile(@RequestBody UserProfileDto userProfileDto) {
-        return userProfileService.updateUserProfile(userProfileDto);
+    public UserProfileDto updateUserProfile(@AuthenticationPrincipal String userId, @Valid @RequestBody UserProfileCreateDto userProfileCreateDto) {
+        return userProfileService.updateUserProfile(Long.parseLong(userId),userProfileCreateDto);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @PreAuthorize(value = "hasRole('ADMIN')")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteUserProfileById(@PathVariable Long id) {
         userProfileService.deleteUserProfileById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @PreAuthorize(value = "hasAnyRole('ADMIN','USER','SELLER')")
+    @GetMapping("/history")
+    public UserProfileWithHistoryDto getUserProfileWithHistory(@AuthenticationPrincipal String userId){
+        UserProfileWithHistoryDto userProfileWithHistoryDto = userProfileService.getUserProfileWithHistory(Long.parseLong(userId));
+        return userProfileWithHistoryDto;
+    }
+
+    @PreAuthorize(value = "hasAnyRole('ADMIN','USER','SELLER')")
+    @GetMapping("/wishlist")
+    public UserProfileWithWishlistDto getUserProfileWithWishlist(@AuthenticationPrincipal String userId){
+        UserProfileWithWishlistDto userProfileWithWishlistDto = userProfileService.getUserProfileWithWishlist(Long.parseLong(userId));
+        return userProfileWithWishlistDto;
+    }
+
+    @PreAuthorize(value = "hasAnyRole('ADMIN','USER','SELLER')")
+    @DeleteMapping("/wishlist")
+    public ResponseEntity clearWishlist(@AuthenticationPrincipal String id) {
+        userProfileService.clearWishlist(Long.parseLong(id));
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

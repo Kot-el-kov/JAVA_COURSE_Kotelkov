@@ -1,8 +1,8 @@
 package com.github.kotelkov.pms.dao;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
+import org.springframework.data.domain.Pageable;
+
+import javax.persistence.*;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
@@ -40,12 +40,14 @@ public class AbstractDao<Entity, Id> implements GenericDao<Entity, Id>{
     }
 
     @Override
-    public List<Entity> getAll() {
+    public List<Entity> getAll(Pageable pageable) {
         final CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         final CriteriaQuery<Entity> criteriaQuery = criteriaBuilder.createQuery(entityClass);
         final Root<Entity> rootEntry = criteriaQuery.from(entityClass);
         CriteriaQuery<Entity> query = criteriaQuery.select(rootEntry);
+        query.orderBy(criteriaBuilder.asc(rootEntry.get(pageable.getSort().toList().get(0).getProperty())));
         TypedQuery<Entity> allQuery = entityManager.createQuery(query);
+        allQuery.setFirstResult((int) pageable.getOffset()).setMaxResults(pageable.getPageSize());
         return allQuery.getResultList();
     }
 }

@@ -1,5 +1,5 @@
 CREATE TABLE "users_profiles" (
-	"id" serial NOT NULL,
+	"id" bigint NOT NULL,
 	"name" varchar(255) NOT NULL,
 	"surname" varchar(255) NOT NULL,
 	"email" varchar(255) NOT NULL,

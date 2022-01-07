@@ -8,7 +8,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Component
-
 public class Mapper<Model,Dto> implements GenericMapper<Model,Dto>{
 
     private final ModelMapper modelMapper;

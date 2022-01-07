@@ -1,4 +1,4 @@
-package com.github.kotelkov.pms;
+package com.github.kotelkov.pms.init;
 
 import com.github.kotelkov.pms.configuration.WebConfiguration;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;

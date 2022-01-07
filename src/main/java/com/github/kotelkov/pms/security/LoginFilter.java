@@ -23,12 +23,14 @@ public class LoginFilter extends UsernamePasswordAuthenticationFilter {
         this.objectMapper=objectMapper;
     }
 
+
+
     @SneakyThrows
     @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest,HttpServletResponse httpServletResponse) {
         Credo credo = objectMapper.readValue(httpServletRequest.getInputStream(),Credo.class);
         return getAuthenticationManager().
-                authenticate(new UsernamePasswordAuthenticationToken(credo.getUsername(),credo.getPassword()));
+                authenticate(new UsernamePasswordAuthenticationToken(credo.getLogin(),credo.getPassword()));
     }
 
     @Override

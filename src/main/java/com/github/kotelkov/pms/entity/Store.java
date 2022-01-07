@@ -1,8 +1,6 @@
 package com.github.kotelkov.pms.entity;
 
-import com.github.kotelkov.pms.dto.ProductDto;
 import lombok.*;
-import org.hibernate.mapping.FetchProfile;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,16 +9,14 @@ import java.util.List;
 @Table(name = "stores")
 @Getter
 @Setter
+@Builder
 @ToString(exclude = "products")
 @NoArgsConstructor
 @AllArgsConstructor
-@NamedEntityGraph(
-        name="with-products",
-        attributeNodes = @NamedAttributeNode("products")
-)
 public class Store {
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "store-id-sequence")
+    @SequenceGenerator(name = "store-id-sequence", sequenceName = "stores_id_seq", allocationSize = 1)
     private Long id;
     @Column(name = "name")
     private String name;
@@ -32,5 +28,4 @@ public class Store {
             joinColumns = @JoinColumn(name = "store_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private List<Product> products;
-
 }
