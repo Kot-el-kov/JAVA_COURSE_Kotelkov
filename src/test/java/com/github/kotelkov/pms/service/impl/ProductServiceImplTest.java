@@ -48,8 +48,8 @@ class ProductServiceImplTest {
     @Test
     void testCreateProduct() {
         when(productRepository.save(any())).thenReturn(product);
-        when(mapper.convertToModel(any(), any())).thenReturn(product);
-        when(mapper.convertToDto(any(), any())).thenReturn(productDto);
+        when(mapper.convert(productCreateDto, Product.class)).thenReturn(product);
+        when(mapper.convert(product, ProductDto.class)).thenReturn(productDto);
         ProductDto result = productServiceImpl.createProduct(productCreateDto);
         Assertions.assertEquals(productDto, result);
         verify(productRepository,times(1)).save(product);
@@ -58,7 +58,8 @@ class ProductServiceImplTest {
     @Test
     void testGetProductById() {
         when(productRepository.getById(any())).thenReturn(product);
-        when(mapper.convertToDto(any(), any())).thenReturn(productDto);
+        when(mapper.convert(product, Product.class)).thenReturn(product);
+        when(mapper.convert(product, ProductDto.class)).thenReturn(productDto);
         ProductDto result = productServiceImpl.getProductById(1L,productDto.getId());
         Assertions.assertEquals(productDto, result);
         verify(productRepository,times(1)).getById(product.getId());
@@ -68,7 +69,7 @@ class ProductServiceImplTest {
     @Test
     void testGetAllProducts() {
         when(productRepository.getAll(any())).thenReturn(Arrays.asList(product));
-        when(mapper.convertListToDtoList(any(), any())).thenReturn(Arrays.asList(productDto));
+        when(mapper.convert(any(), any())).thenReturn(Arrays.asList(productDto));
         Pageable pageable = PageRequest.of(0, 10, ASC,"id");
         Page result = productServiceImpl.getAllProducts(pageable);
         Assertions.assertEquals(productDto, result.getContent().get(0));
@@ -78,7 +79,7 @@ class ProductServiceImplTest {
     @Test
     void testGetProductWithStores(){
         when(productRepository.getProductWithStores(anyLong())).thenReturn(product);
-        when(mapper.convertToDto(any(),any())).thenReturn(productWithStoresDto);
+        when(mapper.convert(product,ProductWithStoresDto.class)).thenReturn(productWithStoresDto);
         ProductWithStoresDto result = productServiceImpl.getProductWithStores(productDto.getId());
         Assertions.assertEquals(productWithStoresDto, result);
         verify(productRepository,times(1)).getProductWithStores(productDto.getId());
@@ -87,8 +88,8 @@ class ProductServiceImplTest {
     @Test
     void testUpdateProduct() {
         when(productRepository.update(any())).thenReturn(product);
-        when(mapper.convertToModel(any(), any())).thenReturn(product);
-        when(mapper.convertToDto(any(), any())).thenReturn(productDto);
+        when(mapper.convert(productDto, Product.class)).thenReturn(product);
+        when(mapper.convert(product, ProductDto.class)).thenReturn(productDto);
         ProductDto result = productServiceImpl.updateProduct(productDto);
         Assertions.assertEquals(productDto, result);
         verify(productRepository,times(1)).update(product);
@@ -96,7 +97,9 @@ class ProductServiceImplTest {
 
     @Test
     void testDeleteProduct() {
-        when(mapper.convertToDto(any(), any())).thenReturn(productDto);
+        when(mapper.convert(product,ProductDto.class)).thenReturn(productDto);
+        when(mapper.convert(productCreateDto, Product.class)).thenReturn(product);
+        when(productRepository.save(any())).thenReturn(product);
         ProductDto productDto = productServiceImpl.createProduct(productCreateDto);
         productServiceImpl.deleteProduct(productDto.getId());
         verify(productRepository,times(1)).delete(productDto.getId());
@@ -123,7 +126,7 @@ class ProductServiceImplTest {
     @Test
     void testGetProductsByName() {
         when(productRepository.getProductsByName(anyString(), any())).thenReturn(Collections.singletonList(product));
-        when(mapper.convertListToDtoList(any(), any())).thenReturn(Collections.singletonList(productDto));
+        when(mapper.convert(any(), any())).thenReturn(Collections.singletonList(productDto));
         Pageable pageable = PageRequest.of(0, 10, ASC,"id");
         Page result = productServiceImpl.getProductsByName(productDto.getName(), pageable);
         Assertions.assertEquals(productDto, result.getContent().get(0));

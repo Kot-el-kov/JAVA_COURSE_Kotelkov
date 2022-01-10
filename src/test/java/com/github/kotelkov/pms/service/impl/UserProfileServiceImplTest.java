@@ -8,9 +8,9 @@ import com.github.kotelkov.pms.dto.user.profile.UserProfileWithHistoryDto;
 import com.github.kotelkov.pms.dto.user.profile.UserProfileWithWishlistDto;
 import com.github.kotelkov.pms.entity.UserProfile;
 import com.github.kotelkov.pms.mapper.Mapper;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -44,7 +44,7 @@ public class UserProfileServiceImplTest {
             id(1L).name("name").surname("surname").email("asda@mail.ru").wishlist(Collections.singletonList(productDto)).build();
 
 
-    @Before
+    @BeforeEach
     public void setUp() {
         MockitoAnnotations.initMocks(this);
     }
@@ -52,40 +52,40 @@ public class UserProfileServiceImplTest {
     @Test
     void testCreateUserProfile() {
         when(userProfileRepository.save(any())).thenReturn(userProfile);
-        when(mapper.convertToModel(any(), any())).thenReturn(userProfile);
-        when(mapper.convertToDto(any(), any())).thenReturn(userProfileDto);
+        when(mapper.convert(userProfileCreateDto, UserProfile.class)).thenReturn(userProfile);
+        when(mapper.convert(userProfile, UserProfileDto.class)).thenReturn(userProfileDto);
         UserProfileDto result = userProfileServiceImpl.createUserProfile(1L,userProfileCreateDto);
-        Assert.assertEquals(userProfileDto, result);
+        Assertions.assertEquals(userProfileDto, result);
         verify(userProfileRepository,times(1)).save(userProfile);
     }
 
     @Test
     void testGetUserProfileById() {
         when(userProfileRepository.getById(any())).thenReturn(userProfile);
-        when(mapper.convertToDto(any(), any())).thenReturn(userProfileDto);
+        when(mapper.convert(userProfile, UserProfileDto.class)).thenReturn(userProfileDto);
         UserProfileDto result = userProfileServiceImpl.getUserProfileById(userProfile.getId());
-        Assert.assertEquals(userProfileDto, result);
+        Assertions.assertEquals(userProfileDto, result);
         verify(userProfileRepository,times(1)).getById(userProfile.getId());
     }
 
     @Test
     void testGetAllUsersProfiles() {
         when(userProfileRepository.getAll(any())).thenReturn(Collections.singletonList(userProfile));
-        when(mapper.convertListToDtoList(any(), any())).thenReturn(Collections.singletonList(userProfileDto));
+        when(mapper.convert(any(), any())).thenReturn(Collections.singletonList(userProfileDto));
         Pageable pageable = PageRequest.of(0, 10, ASC,"id");
         Page result = userProfileServiceImpl.getAllUsersProfiles(pageable);
-        Assert.assertEquals(1, result.getContent().size());
-        Assert.assertEquals(userProfileDto, result.getContent().get(0));
+        Assertions.assertEquals(1, result.getContent().size());
+        Assertions.assertEquals(userProfileDto, result.getContent().get(0));
         verify(userProfileRepository,times(1)).getAll(pageable);
     }
 
     @Test
     void testUpdateUserProfile() {
         when(userProfileRepository.update(any())).thenReturn(userProfile);
-        when(mapper.convertToModel(any(), any())).thenReturn(userProfile);
-        when(mapper.convertToDto(any(), any())).thenReturn(userProfileDto);
+        when(mapper.convert(userProfileCreateDto, UserProfile.class)).thenReturn(userProfile);
+        when(mapper.convert(userProfile, UserProfileDto.class)).thenReturn(userProfileDto);
         UserProfileDto result = userProfileServiceImpl.updateUserProfile(1L, userProfileCreateDto);
-        Assert.assertEquals(userProfileDto, result);
+        Assertions.assertEquals(userProfileDto, result);
         verify(userProfileRepository,times(1)).update(userProfile);
     }
 
@@ -98,18 +98,18 @@ public class UserProfileServiceImplTest {
     @Test
     void testGetUserProfileWithHistory() {
         when(userProfileRepository.getUserProfileWithHistory(anyLong())).thenReturn(userProfile);
-        when(mapper.convertToDto(any(), any())).thenReturn(userProfileWithHistoryDto);
+        when(mapper.convert(userProfile, UserProfileWithHistoryDto.class)).thenReturn(userProfileWithHistoryDto);
         UserProfileWithHistoryDto result = userProfileServiceImpl.getUserProfileWithHistory(1L);
-        Assert.assertEquals(userProfileWithHistoryDto, result);
+        Assertions.assertEquals(userProfileWithHistoryDto, result);
         verify(userProfileRepository,times(1)).getUserProfileWithHistory(1L);
     }
 
     @Test
     void testGetUserProfileWithWishlist() {
         when(userProfileRepository.getUserProfileWithWishlist(anyLong())).thenReturn(userProfile);
-        when(mapper.convertToDto(any(), any())).thenReturn(userProfileWithWishlistDto);
+        when(mapper.convert(userProfile, UserProfileWithWishlistDto.class)).thenReturn(userProfileWithWishlistDto);
         UserProfileWithWishlistDto result = userProfileServiceImpl.getUserProfileWithWishlist(1L);
-        Assert.assertEquals(userProfileWithWishlistDto, result);
+        Assertions.assertEquals(userProfileWithWishlistDto, result);
         verify(userProfileRepository,times(1)).getUserProfileWithWishlist(1L);
     }
 

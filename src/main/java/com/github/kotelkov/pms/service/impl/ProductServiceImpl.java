@@ -6,6 +6,7 @@ import com.github.kotelkov.pms.dto.product.ProductDto;
 import com.github.kotelkov.pms.dto.product.ProductWithStoresDto;
 import com.github.kotelkov.pms.dto.store.StoreDto;
 import com.github.kotelkov.pms.entity.Product;
+import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.mapper.Mapper;
 import com.github.kotelkov.pms.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class  ProductServiceImpl implements ProductService {
@@ -27,30 +29,32 @@ public class  ProductServiceImpl implements ProductService {
 
     @Transactional
     @Override
-    public ProductDto createProduct(ProductCreateDto productDto) {
-        return (ProductDto) mapper.convertToDto(productRepository.
-                save((Product) mapper.convertToModel(productDto,Product.class)),ProductDto.class);
+    public ProductDto createProduct(ProductCreateDto productCreateDto) {
+        return mapper.convert(productRepository.save(mapper.convert(productCreateDto,Product.class)),ProductDto.class);
     }
 
     @Transactional
     @Override
     public ProductDto getProductById(Long userId,Long productId) {
         addProductToHistory(userId,productId);
-        return (ProductDto) mapper.convertToDto(productRepository.getById(productId),ProductDto.class);
+        ProductDto productDto = mapper.convert(productRepository.getById(productId),ProductDto.class);
+        return Optional.ofNullable(productDto).
+                orElseThrow(() -> new ResourceNotFoundException("Product with id: "+productId+" not found"));
     }
 
     @Transactional
     @Override
     public Page getAllProducts(Pageable pageable) {
-        List productDtoList = mapper.convertListToDtoList(productRepository.getAll(pageable),ProductDto.class);
+        List productList = productRepository.getAll(pageable);
+        List productDtoList = mapper.convert(productList,ProductDto.class);
+        Optional.ofNullable(productDtoList).orElseThrow(()-> new ResourceNotFoundException("Products not found"));
         return new PageImpl(productDtoList,pageable.first() ,productDtoList.size());
     }
 
     @Transactional
     @Override
     public ProductDto updateProduct(ProductDto productDto) {
-        return (ProductDto) mapper.convertToDto(productRepository.update((Product)
-                mapper.convertToModel(productDto,Product.class)),ProductDto.class);
+        return mapper.convert(productRepository.update(mapper.convert(productDto,Product.class)),ProductDto.class);
     }
 
     @Transactional
@@ -63,10 +67,11 @@ public class  ProductServiceImpl implements ProductService {
     @Override
     public ProductWithStoresDto getProductWithStores(Long productId) {
         Product product = productRepository.getProductWithStores(productId);
-        ProductWithStoresDto productWithStoresDto = (ProductWithStoresDto) mapper.convertToDto(product, ProductWithStoresDto.class);
-        List storeDtoList = mapper.convertListToDtoList(product.getStores(), StoreDto.class);
-        productWithStoresDto.setStoresDto(storeDtoList);
-        return productWithStoresDto;
+        ProductWithStoresDto productWithStoresDto = mapper.convert(product, ProductWithStoresDto.class);
+        List storeList = product.getStores();
+        productWithStoresDto.setStoresDto(mapper.convert(storeList, StoreDto.class));
+        return Optional.of(productWithStoresDto).
+                orElseThrow(()-> new ResourceNotFoundException("Product not found"));
     }
 
     @Transactional
@@ -90,8 +95,8 @@ public class  ProductServiceImpl implements ProductService {
     @Transactional
     @Override
     public Page getProductsByName(String name,Pageable pageable){
-        List productDtoList = mapper.convertListToDtoList(productRepository.
-                getProductsByName(name,pageable),ProductDto.class);
+        List productList = productRepository.getProductsByName(name,pageable);
+        List productDtoList = mapper.convert(productList,ProductDto.class);
         return new PageImpl(productDtoList,pageable.first(),productDtoList.size());
     }
 

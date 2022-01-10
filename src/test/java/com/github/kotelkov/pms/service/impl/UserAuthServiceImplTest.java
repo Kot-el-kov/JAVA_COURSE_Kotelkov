@@ -73,8 +73,8 @@ class UserAuthServiceImplTest {
     @Test
     void testCreateUserAuth() {
         when(userAuthRepository.save(any())).thenReturn(userAuth);
-        when(mapper.convertToDto(userAuth, UserAuthWithRoleDto.class)).thenReturn(userAuthWithRoleDto);
-        when(mapper.convertToDto(role,RoleDto.class)).thenReturn(roleDto);
+        when(mapper.convert(userAuth, UserAuthWithRoleDto.class)).thenReturn(userAuthWithRoleDto);
+        when(mapper.convert(role,RoleDto.class)).thenReturn(roleDto);
         when(roleRepository.getRoleByName(any())).thenReturn(role);
         UserAuthWithRoleDto result = userAuthServiceImpl.createUserAuth(userAuthCreateDto);
         Assertions.assertEquals(userAuthWithRoleDto, result);
@@ -83,7 +83,7 @@ class UserAuthServiceImplTest {
     @Test
     void testGetUserAuthById() {
         when(userAuthRepository.getById(any())).thenReturn(userAuth);
-        when(mapper.convertToDto(any(), any())).thenReturn(userAuthDto);
+        when(mapper.convert(userAuth, UserAuthDto.class)).thenReturn(userAuthDto);
         UserAuthDto result = userAuthServiceImpl.getUserAuthById(userAuthDto.getId());
         Assertions.assertEquals(userAuthDto, result);
         verify(userAuthRepository,times(1)).getById(userAuthDto.getId());
@@ -92,7 +92,7 @@ class UserAuthServiceImplTest {
     @Test
     void testGetAllUsersAuths() {
         when(userAuthRepository.getAll(any())).thenReturn(Collections.singletonList(userAuth));
-        when(mapper.convertListToDtoList(any(), any())).thenReturn(Collections.singletonList(userAuthDto));
+        when(mapper.convert(any(), any())).thenReturn(Collections.singletonList(userAuthDto));
         Pageable pageable = PageRequest.of(0, 10, ASC,"id");
         Page result = userAuthServiceImpl.getAllUsersAuths(pageable);
         Assertions.assertEquals(1L, result.getContent().size());
@@ -104,7 +104,7 @@ class UserAuthServiceImplTest {
     void testUpdateUserAuth() {
         when(userAuthRepository.getByIdWithRole(anyLong())).thenReturn(userAuth);
         when(userAuthRepository.update(any())).thenReturn(userAuth);
-        when(mapper.convertToDto(any(), any())).thenReturn(userAuthDto);
+        when(mapper.convert(userAuth, UserAuthDto.class)).thenReturn(userAuthDto);
         when(roleRepository.update(any())).thenReturn(role);
         UserAuthDto result = userAuthServiceImpl.updateUserAuth(userAuthDto);
         Assertions.assertEquals(userAuthDto, result);
@@ -114,7 +114,7 @@ class UserAuthServiceImplTest {
     @Test
     void testGetUserAuthByLogin() {
         when(userAuthRepository.getByLogin(anyString())).thenReturn(userAuth);
-        when(mapper.convertToDto(any(), any())).thenReturn(userAuthDto);
+        when(mapper.convert(userAuth, UserAuthDto.class)).thenReturn(userAuthDto);
         UserAuthDto result = userAuthServiceImpl.getUserAuthByLogin(userAuthDto.getLogin());
         Assertions.assertEquals(userAuthDto, result);
         verify(userAuthRepository,times(1)).getByLogin(userAuthDto.getLogin());
@@ -123,8 +123,8 @@ class UserAuthServiceImplTest {
     @Test
     void testGetUserAuthWithUserProfile() {
         when(userAuthRepository.getUserAuthWithUserProfile(anyLong())).thenReturn(userAuth);
-        when(mapper.convertToDto(userAuth, UserAuthWithUserProfileDto.class)).thenReturn(userAuthWithUserProfileDto);
-        when(mapper.convertToDto(userAuth.getUserProfile(),UserProfileDto.class)).
+        when(mapper.convert(userAuth, UserAuthWithUserProfileDto.class)).thenReturn(userAuthWithUserProfileDto);
+        when(mapper.convert(userAuth.getUserProfile(),UserProfileDto.class)).
                 thenReturn(userAuthWithUserProfileDto.getUserProfileDto());
         UserAuthWithUserProfileDto result = userAuthServiceImpl.getUserAuthWithUserProfile(1L);
         Assertions.assertEquals(userAuthWithUserProfileDto, result);

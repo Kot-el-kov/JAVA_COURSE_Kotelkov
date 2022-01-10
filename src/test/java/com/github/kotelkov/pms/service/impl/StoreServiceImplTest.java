@@ -44,8 +44,8 @@ class StoreServiceImplTest {
     @Test
     void testCreateStore() {
         when(storeRepository.save(any())).thenReturn(store);
-        when(mapper.convertToModel(any(), any())).thenReturn(store);
-        when(mapper.convertToDto(any(), any())).thenReturn(storeDto);
+        when(mapper.convert(storeCreateDto, Store.class)).thenReturn(store);
+        when(mapper.convert(store, StoreDto.class)).thenReturn(storeDto);
         StoreDto result = storeServiceImpl.createStore(storeCreateDto);
         Assertions.assertEquals(storeDto, result);
         verify(storeRepository,times(1)).save(store);
@@ -54,7 +54,7 @@ class StoreServiceImplTest {
     @Test
     void testGetStoreById() {
         when(storeRepository.getById(any())).thenReturn(store);
-        when(mapper.convertToDto(any(), any())).thenReturn(storeDto);
+        when(mapper.convert(store, StoreDto.class)).thenReturn(storeDto);
         StoreDto result = storeServiceImpl.getStoreById(store.getId());
         Assertions.assertEquals(storeDto, result);
         verify(storeRepository,times(1)).getById(store.getId());
@@ -63,7 +63,7 @@ class StoreServiceImplTest {
     @Test
     void testGetAllStores() {
         when(storeRepository.getAll(any())).thenReturn(Collections.singletonList(store));
-        when(mapper.convertListToDtoList(any(), any())).thenReturn(Collections.singletonList(storeDto));
+        when(mapper.convert(any(), any())).thenReturn(Collections.singletonList(storeDto));
         Pageable pageable = PageRequest.of(0, 10, ASC,"id");
         Page result = storeServiceImpl.getAllStores(pageable);
         Assertions.assertEquals(1, result.getContent().size());
@@ -74,8 +74,8 @@ class StoreServiceImplTest {
     @Test
     void testUpdateStore() {
         when(storeRepository.update(any())).thenReturn(store);
-        when(mapper.convertToModel(any(), any())).thenReturn(store);
-        when(mapper.convertToDto(any(), any())).thenReturn(storeDto);
+        when(mapper.convert(storeDto, Store.class)).thenReturn(store);
+        when(mapper.convert(store, StoreDto.class)).thenReturn(storeDto);
         StoreDto result = storeServiceImpl.updateStore(storeDto);
         Assertions.assertEquals(storeDto, result);
         verify(storeRepository,times(1)).update(store);
@@ -90,7 +90,7 @@ class StoreServiceImplTest {
     @Test
     void testGetStoreByName() {
         when(storeRepository.getStoreByName(anyString())).thenReturn(store);
-        when(mapper.convertToDto(any(), any())).thenReturn(storeDto);
+        when(mapper.convert(store, StoreDto.class)).thenReturn(storeDto);
         StoreDto result = storeServiceImpl.getStoreByName(storeDto.getName());
         Assertions.assertEquals(storeDto, result);
         verify(storeRepository,times(1)).getStoreByName(store.getName());
@@ -99,7 +99,7 @@ class StoreServiceImplTest {
     @Test
     void testGetStoreWithProducts(){
         when(storeRepository.getStoreWithProducts(any())).thenReturn(store);
-        when(mapper.convertToDto(any(),any())).thenReturn(storeWithProductsDto);
+        when(mapper.convert(store,StoreWithProductsDto.class)).thenReturn(storeWithProductsDto);
         StoreWithProductsDto result = storeServiceImpl.getStoreWithProducts(storeDto.getId());
         Assertions.assertEquals(storeWithProductsDto, result);
         verify(storeRepository,times(1)).getStoreWithProducts(storeDto.getId());

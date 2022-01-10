@@ -4,20 +4,16 @@ import com.github.kotelkov.pms.dto.user.profile.UserProfileCreateDto;
 import com.github.kotelkov.pms.dto.user.profile.UserProfileDto;
 import com.github.kotelkov.pms.dto.user.profile.UserProfileWithHistoryDto;
 import com.github.kotelkov.pms.dto.user.profile.UserProfileWithWishlistDto;
-import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.service.UserProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.Optional;
 
 import static org.springframework.data.domain.Sort.Direction.ASC;
 
@@ -38,9 +34,7 @@ public class UserProfileController {
     @PreAuthorize(value = "hasAnyRole('ADMIN','USER','SELLER')")
     @GetMapping("/id")
     public UserProfileDto getUserProfileById(@AuthenticationPrincipal String userId) {
-        UserProfileDto userProfileDto = Optional.ofNullable(userProfileService.getUserProfileById(Long.parseLong(userId))).
-                orElseThrow(()->new ResourceNotFoundException("UserProfile with id: "+userId+" not found"));
-        return userProfileDto;
+        return userProfileService.getUserProfileById(Long.parseLong(userId));
     }
 
     @PreAuthorize(value = "hasRole('ADMIN')")
@@ -48,8 +42,7 @@ public class UserProfileController {
     public Page<UserProfileDto> getAllUsersProfiles(@RequestParam(value = "page", defaultValue = "0", required = false) Integer page,
                                                     @RequestParam(value = "size", defaultValue = "10", required = false) Integer size,
                                                     @RequestParam(value = "sort", defaultValue = "id", required = false) String sort) {
-        Page<UserProfileDto> userProfileDtoList = userProfileService.getAllUsersProfiles(PageRequest.of(page, size, ASC, sort));
-        return userProfileDtoList;
+        return userProfileService.getAllUsersProfiles(PageRequest.of(page, size, ASC, sort));
     }
 
     @PreAuthorize(value = "hasAnyRole('ADMIN','USER','SELLER')")
@@ -60,29 +53,25 @@ public class UserProfileController {
 
     @PreAuthorize(value = "hasRole('ADMIN')")
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteUserProfileById(@PathVariable Long id) {
+    public void deleteUserProfileById(@PathVariable Long id) {
         userProfileService.deleteUserProfileById(id);
-        return ResponseEntity.ok(HttpStatus.OK);
     }
 
     @PreAuthorize(value = "hasAnyRole('ADMIN','USER','SELLER')")
     @GetMapping("/history")
     public UserProfileWithHistoryDto getUserProfileWithHistory(@AuthenticationPrincipal String userId){
-        UserProfileWithHistoryDto userProfileWithHistoryDto = userProfileService.getUserProfileWithHistory(Long.parseLong(userId));
-        return userProfileWithHistoryDto;
+        return userProfileService.getUserProfileWithHistory(Long.parseLong(userId));
     }
 
     @PreAuthorize(value = "hasAnyRole('ADMIN','USER','SELLER')")
     @GetMapping("/wishlist")
     public UserProfileWithWishlistDto getUserProfileWithWishlist(@AuthenticationPrincipal String userId){
-        UserProfileWithWishlistDto userProfileWithWishlistDto = userProfileService.getUserProfileWithWishlist(Long.parseLong(userId));
-        return userProfileWithWishlistDto;
+        return userProfileService.getUserProfileWithWishlist(Long.parseLong(userId));
     }
 
     @PreAuthorize(value = "hasAnyRole('ADMIN','USER','SELLER')")
     @DeleteMapping("/wishlist")
-    public ResponseEntity clearWishlist(@AuthenticationPrincipal String id) {
+    public void clearWishlist(@AuthenticationPrincipal String id) {
         userProfileService.clearWishlist(Long.parseLong(id));
-        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

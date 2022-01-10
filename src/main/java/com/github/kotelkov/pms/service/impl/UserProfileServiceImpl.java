@@ -6,6 +6,7 @@ import com.github.kotelkov.pms.dto.user.profile.UserProfileDto;
 import com.github.kotelkov.pms.dto.user.profile.UserProfileWithHistoryDto;
 import com.github.kotelkov.pms.dto.user.profile.UserProfileWithWishlistDto;
 import com.github.kotelkov.pms.entity.UserProfile;
+import com.github.kotelkov.pms.exception.ResourceNotFoundException;
 import com.github.kotelkov.pms.mapper.Mapper;
 import com.github.kotelkov.pms.service.UserProfileService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
@@ -28,31 +30,32 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Transactional
     @Override
     public UserProfileDto createUserProfile(Long userId,UserProfileCreateDto userProfileCreateDto) {
-        UserProfile userProfile = (UserProfile) mapper.convertToModel(userProfileCreateDto,UserProfile.class);
+        UserProfile userProfile = mapper.convert(userProfileCreateDto,UserProfile.class);
         userProfile.setId(userId);
-        return (UserProfileDto) mapper.convertToDto(userProfileRepository.save(userProfile),UserProfileDto.class);
+        return mapper.convert(userProfileRepository.save(userProfile),UserProfileDto.class);
     }
 
     @Transactional
     @Override
     public UserProfileDto getUserProfileById(Long id) {
-        return (UserProfileDto) mapper.convertToDto(userProfileRepository.getById(id),UserProfileDto.class);
+        return Optional.ofNullable(mapper.convert(userProfileRepository.getById(id),UserProfileDto.class)).
+                orElseThrow(()->new ResourceNotFoundException("UserProfile with id: "+id+" not found"));
     }
 
     @Transactional
     @Override
     public Page getAllUsersProfiles(Pageable pageable) {
-        List userProfileDtoList = mapper.
-                convertListToDtoList(userProfileRepository.getAll(pageable),UserProfileDto.class);
+        List userProfileList = userProfileRepository.getAll(pageable);
+        List userProfileDtoList = mapper.convert(userProfileList,UserProfileDto.class);
         return new PageImpl(userProfileDtoList,pageable,userProfileDtoList.size());
     }
 
     @Transactional
     @Override
     public UserProfileDto updateUserProfile(Long userId,UserProfileCreateDto userProfileCreateDto) {
-        UserProfile userProfile = (UserProfile) mapper.convertToModel(userProfileCreateDto,UserProfile.class);
+        UserProfile userProfile = mapper.convert(userProfileCreateDto,UserProfile.class);
         userProfile.setId(userId);
-        return (UserProfileDto) mapper.convertToDto(userProfileRepository.update(userProfile),UserProfileDto.class);
+        return mapper.convert(userProfileRepository.update(userProfile),UserProfileDto.class);
     }
 
     @Transactional
@@ -64,15 +67,13 @@ public class UserProfileServiceImpl implements UserProfileService {
     @Transactional
     @Override
     public UserProfileWithHistoryDto getUserProfileWithHistory(Long id){
-        return (UserProfileWithHistoryDto) mapper.
-                convertToDto(userProfileRepository.getUserProfileWithHistory(id),UserProfileWithHistoryDto.class);
+        return mapper.convert(userProfileRepository.getUserProfileWithHistory(id),UserProfileWithHistoryDto.class);
     }
 
     @Transactional
     @Override
     public UserProfileWithWishlistDto getUserProfileWithWishlist(Long id){
-        return (UserProfileWithWishlistDto) mapper.
-                convertToDto(userProfileRepository.getUserProfileWithWishlist(id),UserProfileWithWishlistDto.class);
+        return mapper.convert(userProfileRepository.getUserProfileWithWishlist(id),UserProfileWithWishlistDto.class);
     }
 
     @Transactional

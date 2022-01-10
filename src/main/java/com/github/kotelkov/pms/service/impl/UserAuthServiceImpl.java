@@ -70,23 +70,24 @@ public class UserAuthServiceImpl implements UserAuthService,UserDetailsService {
         UserAuth userAuth = new UserAuth(userAuthCreateDto.getLogin(),
                 passwordEncoder.encode(userAuthCreateDto.getPassword()),roleRepository.getRoleByName(role));
         userAuth = userAuthRepository.save(userAuth);
-        UserAuthWithRoleDto userAuthWithRoleDto = (UserAuthWithRoleDto) mapper.convertToDto(userAuth,UserAuthWithRoleDto.class);
-        userAuthWithRoleDto.setRoleDto((RoleDto) mapper.convertToDto(userAuth.getRole(),RoleDto.class));
+        UserAuthWithRoleDto userAuthWithRoleDto = mapper.convert(userAuth,UserAuthWithRoleDto.class);
+        userAuthWithRoleDto.setRoleDto(mapper.convert(userAuth.getRole(),RoleDto.class));
         return  userAuthWithRoleDto;
     }
 
     @Transactional
     @Override
     public UserAuthDto getUserAuthById(Long id) {
-        return (UserAuthDto) mapper.convertToDto(userAuthRepository.getById(id),UserAuthDto.class);
+        return Optional.ofNullable(mapper.convert(userAuthRepository.getById(id),UserAuthDto.class)).
+                orElseThrow(()->new ResourceNotFoundException("UserAuth with id: "+id+" not found"));
     }
 
     @Transactional
     @Override
     public Page getAllUsersAuths(Pageable pageable) {
-        List userAuthDtoList = mapper.convertListToDtoList(userAuthRepository.getAll(pageable),UserAuthDto.class);
+        List userAuthList = userAuthRepository.getAll(pageable);
+        List userAuthDtoList = mapper.convert(userAuthList,UserAuthDto.class);
         return new PageImpl(userAuthDtoList,pageable,userAuthDtoList.size());
-
     }
 
     @Transactional
@@ -95,21 +96,23 @@ public class UserAuthServiceImpl implements UserAuthService,UserDetailsService {
         UserAuth userAuth = userAuthRepository.getByIdWithRole(userAuthDto.getId());
         userAuth.setLogin(userAuthDto.getLogin());
         userAuth.setPassword(userAuthDto.getPassword());
-        return (UserAuthDto) mapper.convertToDto(userAuthRepository.update(userAuth),UserAuthDto.class);
+        return mapper.convert(userAuthRepository.update(userAuth),UserAuthDto.class);
     }
 
     @Transactional
     @Override
     public UserAuthDto getUserAuthByLogin(String login){
-        return (UserAuthDto) mapper.convertToDto(userAuthRepository.getByLogin(login),UserAuthDto.class);
+        return mapper.convert(userAuthRepository.getByLogin(login),UserAuthDto.class);
     }
 
     @Transactional
     @Override
     public UserAuthWithUserProfileDto getUserAuthWithUserProfile(Long id) {
         UserAuth userAuth = userAuthRepository.getUserAuthWithUserProfile(id);
-        UserAuthWithUserProfileDto userAuthWithUserProfileDto = (UserAuthWithUserProfileDto) mapper.convertToDto(userAuth,UserAuthWithUserProfileDto.class);
-        userAuthWithUserProfileDto.setUserProfileDto((UserProfileDto) mapper.convertToDto(userAuth.getUserProfile(), UserProfileDto.class));
+        UserAuthWithUserProfileDto userAuthWithUserProfileDto = mapper.convert(userAuth,UserAuthWithUserProfileDto.class);
+        userAuthWithUserProfileDto.setUserProfileDto(mapper.convert(userAuth.getUserProfile(), UserProfileDto.class));
+        Optional.ofNullable(userAuthWithUserProfileDto.getUserProfileDto()).
+                orElseThrow(()->new ResourceNotFoundException("This user does not have profile"));
         return userAuthWithUserProfileDto;
     }
 }

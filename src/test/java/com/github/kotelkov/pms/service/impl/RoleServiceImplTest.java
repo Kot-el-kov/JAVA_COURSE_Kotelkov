@@ -40,8 +40,8 @@ class RoleServiceImplTest {
     @Test
     void testCreateRole() {
         when(roleRepository.save(any())).thenReturn(role);
-        when(mapper.convertToModel(any(), any())).thenReturn(role);
-        when(mapper.convertToDto(any(), any())).thenReturn(roleDto);
+        when(mapper.convert(roleCreateDto, Role.class)).thenReturn(role);
+        when(mapper.convert(role, RoleDto.class)).thenReturn(roleDto);
         RoleDto result = roleServiceImpl.createRole(roleCreateDto);
         Assertions.assertEquals(roleDto, result);
         verify(roleRepository,times(1)).save(role);
@@ -50,7 +50,8 @@ class RoleServiceImplTest {
     @Test
     void testGetRoleById() {
         when(roleRepository.getById(any())).thenReturn(role);
-        when(mapper.convertToDto(any(), any())).thenReturn(roleDto);
+        when(mapper.convert(roleDto, Role.class)).thenReturn(role);
+        when(mapper.convert(role, RoleDto.class)).thenReturn(roleDto);
         RoleDto result = roleServiceImpl.getRoleById(role.getId());
         Assertions.assertEquals(roleDto, result);
         verify(roleRepository,times(1)).getById(role.getId());
@@ -59,8 +60,8 @@ class RoleServiceImplTest {
     @Test
     void testUpdateRole() {
         when(roleRepository.update(any())).thenReturn(role);
-        when(mapper.convertToModel(any(), any())).thenReturn(role);
-        when(mapper.convertToDto(any(), any())).thenReturn(roleDto);
+        when(mapper.convert(roleDto, Role.class)).thenReturn(role);
+        when(mapper.convert(role, RoleDto.class)).thenReturn(roleDto);
         RoleDto result = roleServiceImpl.updateRole(roleDto);
         Assertions.assertEquals(roleDto, result);
         verify(roleRepository,times(1)).update(role);
@@ -69,7 +70,7 @@ class RoleServiceImplTest {
     @Test
     void testGetAllRoles() {
         when(roleRepository.getAll(any())).thenReturn(Arrays.asList(role));
-        when(mapper.convertListToDtoList(any(), any())).thenReturn(Arrays.asList(roleDto));
+        when(mapper.convert(any(), any())).thenReturn(Arrays.asList(roleDto));
         Pageable pageable = PageRequest.of(0, 10, ASC,"id");
         Page result = roleServiceImpl.getAllRoles(pageable);
         Assertions.assertEquals(1, result.getContent().size());
@@ -80,7 +81,7 @@ class RoleServiceImplTest {
     @Test
     void testGetRoleByName() {
         when(roleRepository.getRoleByName(anyString())).thenReturn(role);
-        when(mapper.convertToDto(any(), any())).thenReturn(roleDto);
+        when(mapper.convert(role, RoleDto.class)).thenReturn(roleDto);
         RoleDto result = roleServiceImpl.getRoleByName(role.getName());
         Assertions.assertEquals(roleDto, result);
         verify(roleRepository,times(1)).getRoleByName(role.getName());
