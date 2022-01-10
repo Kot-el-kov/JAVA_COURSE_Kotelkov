@@ -38,7 +38,7 @@ class ProductServiceImplTest {
     private final ProductDto productDto = ProductDto.builder().id(1L).name("name").price(100).description("description").build();
     private final ProductCreateDto productCreateDto = ProductCreateDto.builder().name("name").price(100).description("description").build();
     private final ProductWithStoresDto productWithStoresDto = ProductWithStoresDto.builder().
-            id(1L).name("name").storesDto(Collections.singletonList(StoreDto.builder().name("name").build())).build();
+            id(1L).name("name").stores(Collections.singletonList(StoreDto.builder().name("name").build())).build();
 
     @BeforeEach
     void setUp() {

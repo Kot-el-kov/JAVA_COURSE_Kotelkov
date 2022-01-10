@@ -39,7 +39,7 @@ class StoreServiceImplTest {
     private final StoreDto storeDto =StoreDto.builder().id(1l).name("name").address("address").build();
     private final StoreCreateDto storeCreateDto = StoreCreateDto.builder().name("name").address("address").build();
     private final StoreWithProductsDto storeWithProductsDto = StoreWithProductsDto.builder().
-            id(1L).name("name").productsDto(Collections.singletonList(ProductDto.builder().name("name").build())).build();
+            id(1L).name("name").products(Collections.singletonList(ProductDto.builder().name("name").build())).build();
 
     @Test
     void testCreateStore() {

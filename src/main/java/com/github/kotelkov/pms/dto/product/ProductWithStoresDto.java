@@ -29,5 +29,5 @@ public class ProductWithStoresDto {
     @Size(min=4,max=200)
     private String description;
     @NotNull
-    private List<StoreDto> storesDto;
+    private List<StoreDto> stores;
 }

@@ -70,9 +70,7 @@ public class UserAuthServiceImpl implements UserAuthService,UserDetailsService {
         UserAuth userAuth = new UserAuth(userAuthCreateDto.getLogin(),
                 passwordEncoder.encode(userAuthCreateDto.getPassword()),roleRepository.getRoleByName(role));
         userAuth = userAuthRepository.save(userAuth);
-        UserAuthWithRoleDto userAuthWithRoleDto = mapper.convert(userAuth,UserAuthWithRoleDto.class);
-        userAuthWithRoleDto.setRoleDto(mapper.convert(userAuth.getRole(),RoleDto.class));
-        return  userAuthWithRoleDto;
+        return mapper.convert(userAuth,UserAuthWithRoleDto.class);
     }
 
     @Transactional
@@ -110,8 +108,7 @@ public class UserAuthServiceImpl implements UserAuthService,UserDetailsService {
     public UserAuthWithUserProfileDto getUserAuthWithUserProfile(Long id) {
         UserAuth userAuth = userAuthRepository.getUserAuthWithUserProfile(id);
         UserAuthWithUserProfileDto userAuthWithUserProfileDto = mapper.convert(userAuth,UserAuthWithUserProfileDto.class);
-        userAuthWithUserProfileDto.setUserProfileDto(mapper.convert(userAuth.getUserProfile(), UserProfileDto.class));
-        Optional.ofNullable(userAuthWithUserProfileDto.getUserProfileDto()).
+        Optional.ofNullable(userAuthWithUserProfileDto.getUserProfile()).
                 orElseThrow(()->new ResourceNotFoundException("This user does not have profile"));
         return userAuthWithUserProfileDto;
     }

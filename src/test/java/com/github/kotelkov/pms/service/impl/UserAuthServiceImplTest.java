@@ -46,11 +46,11 @@ class UserAuthServiceImplTest {
             login("login").password("password").build();
     private final UserAuthDto userAuthDto = UserAuthDto.builder().id(1L).login("login").password("password").build();
     private final UserAuthWithRoleDto userAuthWithRoleDto = UserAuthWithRoleDto.builder().
-            roleDto(RoleDto.builder().id(1L).name("name").build()).login("login").password("password").build();
+            role(RoleDto.builder().id(1L).name("name").build()).login("login").password("password").build();
     private final Role role = Role.builder().id(1L).name("name").build();
     private final RoleDto roleDto = RoleDto.builder().id(1L).name("name").build();
     private final UserAuthWithUserProfileDto userAuthWithUserProfileDto = UserAuthWithUserProfileDto.builder().
-            id(1L).login("login").password("password").userProfileDto(UserProfileDto.builder().id(1L).name("name").build()).build();
+            id(1L).login("login").password("password").userProfile(UserProfileDto.builder().id(1L).name("name").build()).build();
 
     @BeforeEach
     void setUp() {
@@ -125,7 +125,7 @@ class UserAuthServiceImplTest {
         when(userAuthRepository.getUserAuthWithUserProfile(anyLong())).thenReturn(userAuth);
         when(mapper.convert(userAuth, UserAuthWithUserProfileDto.class)).thenReturn(userAuthWithUserProfileDto);
         when(mapper.convert(userAuth.getUserProfile(),UserProfileDto.class)).
-                thenReturn(userAuthWithUserProfileDto.getUserProfileDto());
+                thenReturn(userAuthWithUserProfileDto.getUserProfile());
         UserAuthWithUserProfileDto result = userAuthServiceImpl.getUserAuthWithUserProfile(1L);
         Assertions.assertEquals(userAuthWithUserProfileDto, result);
         verify(userAuthRepository,times(1)).getUserAuthWithUserProfile(userAuthDto.getId());

@@ -23,5 +23,5 @@ public class UserAuthWithRoleDto {
     @Size(min=4,max=15)
     private String password;
     @NotNull
-    private RoleDto roleDto;
+    private RoleDto role;
 }

@@ -24,5 +24,5 @@ public class StoreWithProductsDto {
     @Size(min=4,max=15)
     private String address;
     @NotNull
-    private List<ProductDto> productsDto;
+    private List<ProductDto> products;
 }

@@ -23,5 +23,5 @@ public class UserAuthWithUserProfileDto {
     @Size(min=4,max=15)
     private String password;
     @NotNull
-    private UserProfileDto userProfileDto;
+    private UserProfileDto userProfile;
 }

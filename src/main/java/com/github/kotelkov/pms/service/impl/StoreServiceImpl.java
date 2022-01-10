@@ -65,10 +65,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public StoreWithProductsDto getStoreWithProducts(Long id) {
         Store store = storeRepository.getStoreWithProducts(id);
-        StoreWithProductsDto storeDto = mapper.convert(store,StoreWithProductsDto.class);
-        List productList = store.getProducts();
-        storeDto.setProductsDto(mapper.convert(productList,ProductDto.class));
-        return storeDto;
+        return mapper.convert(store,StoreWithProductsDto.class);
     }
 
     @Transactional

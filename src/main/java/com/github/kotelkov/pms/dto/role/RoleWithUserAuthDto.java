@@ -21,5 +21,5 @@ public class RoleWithUserAuthDto {
     @Size(min=3,max=10)
     private String name;
     @NotNull
-    private List<UserAuthDto> userAuthDtoList;
+    private List<UserAuthDto> userAuthList;
 }

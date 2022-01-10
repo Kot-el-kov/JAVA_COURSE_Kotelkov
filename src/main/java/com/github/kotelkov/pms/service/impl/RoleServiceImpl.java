@@ -37,7 +37,7 @@ public class RoleServiceImpl implements RoleService {
     @Override
     public RoleDto getRoleById(Long id) {
         return Optional.ofNullable(mapper.convert(roleRepository.getById(id),RoleDto.class)).
-                orElseThrow(() -> new ResourceNotFoundException("Product with id: "+id+" not found"));
+                orElseThrow(() -> new ResourceNotFoundException("Role with id: "+id+" not found"));
     }
 
     @Transactional

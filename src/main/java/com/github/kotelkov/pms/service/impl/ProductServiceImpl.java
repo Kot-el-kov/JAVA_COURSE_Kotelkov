@@ -68,8 +68,6 @@ public class  ProductServiceImpl implements ProductService {
     public ProductWithStoresDto getProductWithStores(Long productId) {
         Product product = productRepository.getProductWithStores(productId);
         ProductWithStoresDto productWithStoresDto = mapper.convert(product, ProductWithStoresDto.class);
-        List storeList = product.getStores();
-        productWithStoresDto.setStoresDto(mapper.convert(storeList, StoreDto.class));
         return Optional.of(productWithStoresDto).
                 orElseThrow(()-> new ResourceNotFoundException("Product not found"));
     }
